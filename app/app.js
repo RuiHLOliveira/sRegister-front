@@ -1,5 +1,7 @@
-// import config from "./config.js";
 import routing from "./routing.js";
+import ApplicationMenu from './../SpecificComponents/Nav.js';
+
+Vue.component('application-menu', ApplicationMenu);
 
 const vm = new Vue({
     el: "#app",
@@ -20,15 +22,12 @@ const vm = new Vue({
             return fullScreenComponent;
         },
         routeTo (screenComponentName){
-            //find the full ScreenComponent
             const fullScreenComponent = this.findFullScreenComponent(screenComponentName);
-            //setting the currentScreenComponent to render 
             this.currentScreenComponent = fullScreenComponent.component;
-            //changing the url
             // history.pushState({}, fullScreenComponent.name, fullScreenComponent.route);
             location.hash = fullScreenComponent.name;
         },
-        defineStartScreen() {
+        defineStartScreen () {
             if(window.localStorage.sRegisterToken !== ''){
                 this.routeTo('Home');
             } else {

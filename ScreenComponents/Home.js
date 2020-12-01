@@ -1,7 +1,19 @@
-import config from "./../app/config.js";
 export default {
     data: function () {
       return {
+            userName: 'man'
+        }
+    },
+    computed: {
+        userGuest () {
+            if(window.localStorage.sRegisterToken === '' ||
+            window.localStorage.sRegisterToken === undefined){
+                return true;
+            }
+            return false;
+        },
+        userAuth () {
+            return !this.userGuest;
         }
     },
     methods: {
@@ -11,8 +23,11 @@ export default {
         },
     },
     template: `
-    <div>
-        <button @click="logout">Logout</button>
+    <div class="flexWrapper">
+        <application-menu></application-menu>
+        <div class="container">
+            Welcome, {{userName}}
+        </div>
     </div>
     `
 };

@@ -3,21 +3,24 @@ import config from "./../app/config.js";
 export default {
     data: function () {
       return {
-        email: '',
-        password: '',
-        notice: '',
-        noticeType: ''
+            email: '',
+            password: '',
+            notice: '',
+            noticeType: ''
         }
     },
     methods: {
         login(){
-            var form = new FormData();
-            form.set('email', this.email);
-            form.set('password', this.password);
-
+            const headers = new Headers();
+            headers.append("Content-Type", "application/json");
+            const data = JSON.stringify({
+                'email': this.email,
+                'password': this.password
+            });
             fetch(config.serverUrl + "/auth/login",{
+                headers: headers,
                 method: "POST",
-                body: form
+                body: data
             })
             .then(response => {
                 response.json().then(object => {
@@ -31,7 +34,6 @@ export default {
                 });
             });
         },
-
         showNotice(notice, type) {
             this.notice = notice;
             this.noticeType = type;
@@ -43,31 +45,33 @@ export default {
         }
     },
     template: `
+    <div class="flexWrapper">
+        <application-menu></application-menu>
+        <div class="container">
+            <form @submit.prevent="login">
+                <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
 
-    <div>
-        <form @submit.prevent="login">
-            <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
+                <!-- mostrar error aqui -->
+                <!-- <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div> -->
 
-            <!-- mostrar error aqui -->
-            <!-- <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div> -->
+                <label for="inputEmail">Email</label>
+                <input type="email" v-model="email" name="email" id="inputEmail" class="form-control" required autofocus>
+                <label for="inputPassword">Password</label>
+                <input type="password" v-model="password" name="password" id="inputPassword" class="form-control" required>
 
-            <label for="inputEmail">Email</label>
-            <input type="email" v-model="email" name="email" id="inputEmail" class="form-control" required autofocus>
-            <label for="inputPassword">Password</label>
-            <input type="password" v-model="password" name="password" id="inputPassword" class="form-control" required>
+                <button class="btn btn-lg btn-primary" type="submit">Sign in</button>
 
-            <button class="btn btn-lg btn-primary" type="submit">Sign in</button>
+                <br><br>
 
-            <br><br>
-
-            <div class="noticeBoxContainer" 
-                :class="{ ativo: notice != '' }">
-                <div class="noticeBox" :class="{
-                        error: noticeType == 'error',
-                        success: noticeType == 'success'
-                    }">{{notice}}</div>
-            </div>
-        </form>
+                <div class="noticeBoxContainer" 
+                    :class="{ ativo: notice != '' }">
+                    <div class="noticeBox" :class="{
+                            error: noticeType == 'error',
+                            success: noticeType == 'success'
+                        }">{{notice}}</div>
+                </div>
+            </form>
+        </div>
     </div>
     `
 };
