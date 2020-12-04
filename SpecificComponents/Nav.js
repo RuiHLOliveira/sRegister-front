@@ -1,3 +1,4 @@
+import EventBus from "./../app/EventBus.js";
 export default {
     data: function () {
       return {
@@ -17,9 +18,11 @@ export default {
         }
     },
     methods: {
-        logout(){
-            window.localStorage.sRegisterToken = '';
-            this.$emit('route','Login');
+        route(name){
+            EventBus.$emit('route',name);
+        },
+        action(name){
+            EventBus.$emit('action',name)
         },
     },
     template: `
@@ -37,37 +40,37 @@ export default {
         
         <ul id="nav-menu">
             <li v-if="userGuest">
-                <a href="#" @click="$emit('route','Login')">
+                <button @click="route('Login')">
                     <i class="fas fa-user-check"></i>
                     Login
-                </a>
+                </button>
             </li>
             <li v-if="userGuest">
-                <a href="#" @click="$emit('route','Register')">
+                <button @click="route('Register')">
                     <i class="fas fa-user-plus"></i>
                     Register
-                </a>
+                </button>
             </li>
             <li v-if="userAuth">
-                <button @click="logout">
+                <button @click="action('logout')">
                     <i class="fas fa-user-times"></i>
                     Logout
                 </button>
             </li>
             <li v-if="userAuth">
-                <button @click="$emit('route','Register')">
+                <button @click="route('InboxIndex')">
                     <i class="fas fa-plus"></i>
                     Inbox
                 </button>
             </li>
             <li v-if="userAuth">
-                <button>
+                <button @click="route('SituationsIndex')">
                     <i class="fas fa-align-justify"></i>
                     Situations
                 </button>
             </li>
             <li v-if="userAuth">
-                <button>
+                <button @click="route('InvitationsIndex')">
                     <i class="fas fa-envelope-open-text"></i>
                     Invitations
                 </button>

@@ -1,5 +1,9 @@
 * {
     box-sizing: border-box;
+    /* custom colors */
+    --blue: #657baa;
+    --blue: #246997;
+    --brightblue: #b1daf555;
 }
 
 body, h1, h2, ul ,li, p {
@@ -31,6 +35,7 @@ body {
     display: none;
 }
 .noticeBoxContainer.ativo {
+    margin-top: 20px;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -54,6 +59,20 @@ body {
     /* border: 3px solid #77cc77 */
 }
 
+.loader {
+    border: 5px solid #f3f3f3; /* Light grey */
+    border-top: 5px solid #3498db; /* Blue */
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    animation: spin 1s linear infinite;
+    margin: 30px auto;
+}
+  
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
 
 
 @keyframes fadeIn {
@@ -203,7 +222,7 @@ body {
 
 /* NAV BAR */
 nav#sidebar {
-    background: #657baa;
+    background: var(--blue);
     width: 150px;
     height: 100vh;
     /* margin-right: 50px; */
@@ -263,9 +282,22 @@ nav#sidebar ul li button:hover {
 .container {
     width: 100%;
     margin: 0 auto;
-    background-color: #eeeeee33;
+    background-color: #00000011;
     /* background-color: #eeeeee; */
     padding: 20px;
+}
+
+.taskContainer{
+    background-color: var(--brightblue);
+    background-color:white;
+    padding: 10px;
+    margin-bottom: 30px;
+}
+
+.editForm{
+    background-color:white;
+    padding: 10px;
+    margin-bottom: 30px;
 }
 
 /* // Extra small devices (portrait phones, less than 576px)
