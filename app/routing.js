@@ -3,8 +3,14 @@ import Login from "./../ScreenComponents/Login.js";
 import Home from "./../ScreenComponents/Home.js";
 import InboxIndex from "./../ScreenComponents/Inbox/Index.js";
 
-const NotFound = { template: '<p>404 Page not found</p>' };
 const page = '?page=';
+const NotFound = { template: '<p>404 Page not found</p>' };
+const HomeScreenComponent = {
+    route: `/${page}home`,
+    hash: '#Home',
+    name: 'Home',
+    component: Home
+};
 export default {
     'screenComponents': [
         {
@@ -31,11 +37,13 @@ export default {
             name: 'InboxIndex',
             component: InboxIndex
         },
+        HomeScreenComponent
     ],
     'NotFoundScreenComponent': {
         route: undefined,
         hash: '',
         name: 'NotFound',
         component: NotFound
-    }
+    },
+    'HomeScreenComponent': HomeScreenComponent 
 };

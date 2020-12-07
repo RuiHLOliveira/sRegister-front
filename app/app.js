@@ -32,14 +32,15 @@ const vm = new Vue({
             let fullScreenComponent = routing.screenComponents.find( component => {
                 return component.hash === hash
             });
-            if(fullScreenComponent === undefined) fullScreenComponent = NotFoundScreenComponent
+            if(fullScreenComponent === undefined) fullScreenComponent = routing.NotFoundScreenComponent
             return fullScreenComponent;
         },
         findFullScreenComponent (screenComponentName) {
             let fullScreenComponent = routing.screenComponents.find( component => {
-                return component.name === screenComponentName
+                return component.name === screenComponentName;
             });
-            if(fullScreenComponent === undefined) fullScreenComponent = NotFoundScreenComponent
+            
+            if(fullScreenComponent === undefined) fullScreenComponent = routing.NotFoundScreenComponent
             return fullScreenComponent;
         },
         routeTo (screenComponentName){
@@ -51,7 +52,7 @@ const vm = new Vue({
         defineStartScreen () {
             if(window.localStorage.sRegisterToken !== ''){
                 let screenComponent = this.findFullScreenComponentByHash(location.hash);
-                this.routeTo(screenComponent.name);
+                this.routeTo(screenComponent.name == 'NotFound' ? routing.HomeScreenComponent.name : screenComponent.name);
             } else {
                 this.routeTo('Login');
             }

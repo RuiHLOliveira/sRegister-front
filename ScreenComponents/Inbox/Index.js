@@ -1,5 +1,6 @@
 import EventBus from "./../../app/EventBus.js";
 import config from "./../../app/config.js";
+import EditForm from "./Edit.js";
 
 export default {
     data: function () {
@@ -7,10 +8,14 @@ export default {
             busy: true,
             tasks: [],
             situations: [],
-            editForm: false,
+            editFormActive: false,
+            taskForEditing: {},
         }
     },
     computed: {
+    },
+    components: {
+        'EditForm': EditForm,
     },
     methods: {
         showNotice(notice, noticeType, time) {
@@ -22,7 +27,8 @@ export default {
             });
         },
         showEditForm(task){
-            this.editForm = true;
+            this.editFormActive = true;
+            this.taskForEditing = task;
         },
         loadInbox() {
             this.busy = true;
@@ -68,18 +74,17 @@ export default {
             <h1>Inbox</h1>
             
             <div class="taskContainer" v-for="task in tasks" :key="task.id">
-                <p>{{task.id}} - {{task.description}}</p>
+                <p>{{task.id}} - {{task.name}}</p>
+                <p>{{task.description}}</p>
                 <p>belongs to {{task.user.username}}</p>
 
                 <button @click="showEditForm(task)">edit</button>
             </div>
 
-            <div class="editForm" v-if="editForm">
-                <h2>edit form</h2>
-
-                <button @click="editForm = false">cancelar</button>
-                <button>salvar</button>
-            </div>
+            <edit-form 
+                :editFormActive.sync="editFormActive"
+                :task="taskForEditing"
+            ></edit-form>
 
             <div class="loader" v-if="busy"></div>
             <notice-box></notice-box>
