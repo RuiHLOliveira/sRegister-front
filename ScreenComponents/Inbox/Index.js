@@ -49,6 +49,7 @@ export default {
                         this.busy = false;
                         this.tasks = object.tasks;
                         this.situations = object.situations;
+                        console.log(this.tasks);
                         // this.showNotice(object.message,'success');
                     } else {
                         this.busy = false;
@@ -71,19 +72,24 @@ export default {
         <application-menu v-on:action="$emit('action',$event)"></application-menu>
         <div class="container">
 
-            <h1>Inbox</h1>
+            <h1 class="taskInfo">Inbox</h1>
             
             <div class="taskContainer" v-for="task in tasks" :key="task.id">
-                <p>{{task.id}} - {{task.name}}</p>
-                <p>{{task.description}}</p>
-                <p>belongs to {{task.user.username}}</p>
+                <div class="taskInfo">{{task.name}}</div>
+                <div class="taskInfo">{{task.situation.situation}}</div>
+                <div class="taskInfo">{{task.readableDuedate}}</div>
+                <div class="taskInfo">{{task.description}}</div>
+                <div class="taskInfo small">belongs to {{task.user.username}}</div>
 
-                <button @click="showEditForm(task)">edit</button>
+                <button 
+                    @click="showEditForm(task)"
+                    class="mt-2 btn btn-primary"
+                >edit</button>
             </div>
 
             <edit-form 
                 :editFormActive.sync="editFormActive"
-                :task="taskForEditing"
+                :task.sync="taskForEditing"
             ></edit-form>
 
             <div class="loader" v-if="busy"></div>

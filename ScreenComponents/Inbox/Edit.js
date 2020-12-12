@@ -5,8 +5,6 @@ export default {
     data: function () {
       return {
             busy: true,
-            tasks: [],
-            situations: [],
         }
     },
     props: ['editFormActive','task'],
@@ -21,9 +19,16 @@ export default {
                 'time': time
             });
         },
-        close () {
-            this.editFormActive = false;
-            this.$emit('update:editFormActive', editFormActive)
+        closeModal () {
+            this.$emit('update:editFormActive', false)
+            this.$emit('update:task', null)
+        },
+        updateTaskSuccess (object) {
+            this.busy = false;
+            this.tasks = object.tasks;
+            this.situations = object.situations;
+            this.closeModal();
+            this.showNotice(object.message,'success');
         },
         updateTask() {
             this.busy = true;
@@ -43,10 +48,7 @@ export default {
             .then(response => {
                 response.json().then(object => {
                     if(response.ok) {
-                        this.busy = false;
-                        this.tasks = object.tasks;
-                        this.situations = object.situations;
-                        this.showNotice(object.message,'success');
+                        this.updateTaskSuccess(object);
                     } else {
                         this.busy = false;
                         this.showNotice(object.message, 'error');
@@ -65,30 +67,29 @@ export default {
         this.busy = false;
     },
     template: `
-    <div class="flexWrapper editForm" v-if="editFormActive">
+    <div class="flexWrapper editForm modal" v-if="editFormActive">
 
-            <div >
-                <h2>edit form</h2>
+            <div class="modal_container lg form-group">
+                <h2 class="taskInfo">edit form</h2>
 
-                status atual da tarefa<br>
+                <div class="taskInfo">{{task.situation.situation}}</div>
+
                 acoes transformar em projeto<br>
                 acoes completar tarefa<br><br>
 
-                <input type="text" placeholder="name" v-model="task.name" /><br>
-                {{task.name}}<br><br>
-                <input type="date" placeholder="duedate" v-model="task.duedate" /><br>
-                {{task.duedate}}<br><br>
-                <textarea rows="6" name="description" v-model="task.description"></textarea><br>
-                {{task.description}}<br><br>
+                <input class="form-control" type="text" placeholder="name" v-model="task.name" /><br>
+                <input class="form-control" type="date" placeholder="duedate" v-model="task.duedate" /><br>
+                <textarea class="form-control" rows="6" name="description" v-model="task.description"></textarea><br>
 
                 situacao<br>
                 colocar em projeto<br>
 
-                <button @click="editFormActive = false">cancelar</button>
-                <button @click="updateTask()">salvar</button>
+                <button class="btn btn-danger" @click="closeModal()">cancelar</button>
+                <button class="btn btn-success" @click="updateTask()">salvar</button>
+
+                <div class="loader" v-if="busy"></div>
             </div>
 
-            <div class="loader" v-if="busy"></div>
     </div>
     `
 };

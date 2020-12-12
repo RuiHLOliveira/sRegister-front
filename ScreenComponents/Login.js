@@ -67,13 +67,26 @@ export default {
                 <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
 
                 <label for="inputEmail">Email</label>
-                <input :disabled="busy" type="email" v-model="email" name="email" id="inputEmail" class="form-control" required autofocus>
-                <label for="inputPassword">Password</label>
-                <input :disabled="busy" type="password" v-model="password" name="password" id="inputPassword" class="form-control" required>
+                <input 
+                    :disabled="busy"
+                    v-model="email"
+                    class="form-control"
+                    type="email" name="email" id="inputEmail"
+                    required autofocus
+                >
+
+                <label class="mt-3" for="inputPassword">Password</label>
+                <input 
+                    :disabled="busy"
+                    v-model="password" 
+                    class="form-control"
+                    type="password" name="password" id="inputPassword"
+                    required
+                >
 
                 <button 
                     :disabled="busy" type="submit"
-                    class="btn btn-lg btn-primary" 
+                    class="mt-3 btn btn-primary" 
                 >
                     Sign in
                 </button>
