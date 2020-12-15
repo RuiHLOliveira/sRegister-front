@@ -26,9 +26,9 @@ export default {
         }
     },
     template: `
-    <div class="noticeBoxContainer" 
+    <div class="noticeBox" 
         :class="{ ativo: notice != '' }">
-        <div class="noticeBox" :class="{
+        <div class="noticeBoxContainer" :class="{
                 error: noticeType == 'error',
                 success: noticeType == 'success'
             }">{{notice}}</div>

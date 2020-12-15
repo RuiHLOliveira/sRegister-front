@@ -49,12 +49,10 @@ export default {
                         this.busy = false;
                         this.tasks = object.tasks;
                         this.situations = object.situations;
-                        console.log(this.tasks);
-                        // this.showNotice(object.message,'success');
                     } else {
                         this.busy = false;
-                        this.showNotice(object.message, 'error');
-                        EventBus.$emit('AUTH_CHECK', {response, object});
+                        // this.showNotice(object.message, 'error');
+                        EventBus.$emit('HANDLE_REQUEST_ERROR', {response, object});
                     }
                 });
             })
@@ -90,6 +88,7 @@ export default {
             <edit-form 
                 :editFormActive.sync="editFormActive"
                 :task.sync="taskForEditing"
+                :situations="situations"
             ></edit-form>
 
             <div class="loader" v-if="busy"></div>

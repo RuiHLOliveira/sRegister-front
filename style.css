@@ -22,6 +22,11 @@ body {
     font-family: 'Poppins', serif;
 }
 
+.row{
+    margin-top: 15px; 
+    margin-bottom: 15px;
+}
+
 
 .active{
     display: block;
@@ -31,22 +36,41 @@ body {
 }
 
 
-.noticeBoxContainer {
+.modal_container{
+    position: relative;
+    margin: 80px auto;
+    background-color: #ffffff;
+    padding: 40px;
+    max-width: 800px;
+    animation: fadeInDown .3s forwards;
+}
+
+.noticeBox {
     display: none;
 }
-.noticeBoxContainer.ativo {
-    margin-top: 20px;
+.noticeBox.ativo {
+    /* margin-top: 20px; */
     display: flex;
     flex-direction: column;
     justify-content: center;
     animation: fadeInDown .3s;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 100vw;
+    padding: 20px;
 }
-.noticeBox {
+.noticeBoxContainer {
+    position: relative;
+    margin: 80px auto;
+    background-color: #ffffff;
+    animation: fadeInDown .3s forwards;
     display: inline-block;
     width: 300px;
     text-align: center;
     padding: 20px;
-    margin: 0 auto;
+    box-shadow: 0px 5px 5px rgba(0,0,0,.2);
+    /* margin: 0 auto; */
 }
 
 
@@ -166,8 +190,6 @@ body {
     border-bottom: 1px solid #00000011;
     padding-left: 5px;
     padding-bottom: 10px;
-    margin-top: 10px;
-    margin-bottom: 10px;
 }
 
 

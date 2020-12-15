@@ -58,6 +58,12 @@ export default {
                 </button>
             </li>
             <li v-if="userAuth">
+                <button @click="route('Home')">
+                    <i class="fas fa-home"></i>
+                    Home
+                </button>
+            </li>
+            <li v-if="userAuth">
                 <button @click="route('InboxIndex')">
                     <i class="fas fa-plus"></i>
                     Inbox

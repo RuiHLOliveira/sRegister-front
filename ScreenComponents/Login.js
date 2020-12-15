@@ -34,11 +34,14 @@ export default {
                     if(response.ok) {
                         this.busy = false;
                         window.localStorage.sRegisterToken = object.token;
+                        window.localStorage.sRegisterRefreshToken = object.refresh_token;
+                        console.log(window.localStorage.sRegisterRefreshToken);
                         this.showNotice(object.message,'success');
                         EventBus.$emit('route','Home');
                     } else {
                         this.busy = false;
-                        this.showNotice(object.message, 'error');
+                        EventBus.$emit('HANDLE_REQUEST_ERROR', {response, object});
+                        // this.showNotice(object.message, 'error');
                     }
                 });
             })

@@ -2,6 +2,7 @@ import EventBus from "./EventBus.js";
 import routing from "./routing.js";
 import ApplicationMenu from './../SpecificComponents/Nav.js';
 import noticeBox from "./../Components/NoticeBox.js";
+import config from "./../../app/config.js";
 
 Vue.component('application-menu', ApplicationMenu);
 Vue.component('notice-box', noticeBox);
@@ -65,14 +66,46 @@ const vm = new Vue({
                 vue.notice = '';
                 vue.noticeType = '';
             }, time);
-        }
+        },
+        refreshToken(){
+            const headers = new Headers();
+            headers.append("Content-Type", "application/json");
+            const data = JSON.stringify({
+                'refresh_token': window.localStorage.sRegisterRefreshToken
+            });
+
+            fetch(config.serverUrl + "/auth/refreshToken",{
+                headers: headers,
+                method: "POST",
+                body: data
+            })
+            .then(response => {
+                console.log(response);
+                response.json().then(object => {
+                    console.log(object);
+                    if(response.ok) {
+                        window.localStorage.sRegisterToken = object.token;
+                        window.localStorage.sRegisterRefreshToken = object.refresh_token;
+                        alert('recebi o refresh token')
+                        // EventBus.$emit('route','Home');
+                    } else {
+                        this.runAction('logout');
+                        this.showNotice('Session expired, please login again', 'error');
+                    }
+                });
+            })
+            .catch(error => {
+                this.showNotice('Your request failed. Please try again in a few seconds.', 'error');
+            });
+        },
     },
     created () {
-        EventBus.$on('AUTH_CHECK',(data) => {
+        EventBus.$on('HANDLE_REQUEST_ERROR',(data) => {
             if(!data.response.ok &&
-                data.response.status == 401){
-                this.runAction('logout');
-                this.showNotice('Session expired, please login again', 'error');
+            data.response.status == 401){
+                this.refreshToken();
+            } else {
+                this.showNotice(object.message, 'error');
             }
         });
         EventBus.$on('route',(data) => {

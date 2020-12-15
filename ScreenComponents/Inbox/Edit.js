@@ -5,9 +5,10 @@ export default {
     data: function () {
       return {
             busy: true,
+            selected: null,
         }
     },
-    props: ['editFormActive','task'],
+    props: ['editFormActive','task', 'situations'],
     computed: {
     },
     methods: {
@@ -51,8 +52,8 @@ export default {
                         this.updateTaskSuccess(object);
                     } else {
                         this.busy = false;
-                        this.showNotice(object.message, 'error');
-                        EventBus.$emit('AUTH_CHECK', {response, object});
+                        // this.showNotice(object.message, 'error');
+                        EventBus.$emit('HANDLE_REQUEST_ERROR', {response, object});
                     }
                 });
             })
@@ -70,22 +71,63 @@ export default {
     <div class="flexWrapper editForm modal" v-if="editFormActive">
 
             <div class="modal_container lg form-group">
-                <h2 class="taskInfo">edit form</h2>
+                <div class="row">
+                    <div class="col">
+                        <h2 class="taskInfo">edit form</h2>
+                    </div>
+                </div>
 
-                <div class="taskInfo">{{task.situation.situation}}</div>
+                <div class="row">
+                    <div class="col">
+                        <div class="taskInfo">{{task.situation.situation}}</div>
+                    </div>
+                </div>
 
-                acoes transformar em projeto<br>
-                acoes completar tarefa<br><br>
+                <div class="row">
+                    <div class="col">
+                        <button class="btn btn-info" @click="alert('implementar')">Transform in project</button>
+                        <button class="btn btn-success" @click="alert('implementar')">Complete task</button>
+                    </div>
+                </div>
 
-                <input class="form-control" type="text" placeholder="name" v-model="task.name" /><br>
-                <input class="form-control" type="date" placeholder="duedate" v-model="task.duedate" /><br>
-                <textarea class="form-control" rows="6" name="description" v-model="task.description"></textarea><br>
+                <div class="row">
+                    <div class="col">
+                        <input class="form-control" type="text" placeholder="name" v-model="task.name" />
+                    </div>
+                </div>
 
-                situacao<br>
-                colocar em projeto<br>
+                <div class="row">
+                    <div class="col">
+                        <input class="form-control" type="date" placeholder="duedate" v-model="task.duedate" />
+                    </div>
+                </div>
 
-                <button class="btn btn-danger" @click="closeModal()">cancelar</button>
-                <button class="btn btn-success" @click="updateTask()">salvar</button>
+                <div class="row">
+                    <div class="col">
+                        <textarea class="form-control" rows="3" name="description" v-model="task.description"></textarea>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col">
+                        <label for="situation">Situation</label>
+                        <span>{{selected}}</span>
+                        <select class="form-control" name="targetSituation" id="situation">
+                            <option disabled selected value="">--</option>
+                            <option 
+                                v-for="situation in situations"
+                                :key="situation.id"
+                                :value="situation.id"
+                                :selected="true"
+                            >{{situation.situation}}</option>
+                        </select>
+                    </div>
+                </div>
+
+                colocar em projeto
+
+                <button class="btn btn-danger" @click="closeModal()">Cancel</button>
+                <button class="btn btn-success" @click="updateTask()">Save</button>
 
                 <div class="loader" v-if="busy"></div>
             </div>
@@ -93,3 +135,17 @@ export default {
     </div>
     `
 };
+/*
+{% if not task.situation == null and situation.id == task.situation.id %}
+
+                            <option selected value="{{ situation.id }}">{{ situation.situation}}</option>
+                        
+                        {% else %}
+                            <option value="{{ situation.id }}">
+                                {% if situation.user is null  %}
+                                    [default]
+                                {% endif %}
+                                {{ situation.situation }}
+                            </option>
+                        {% endif %}
+                    {% endfor %}*/
