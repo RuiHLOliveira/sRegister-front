@@ -1,6 +1,7 @@
 import EventBus from "./../../app/EventBus.js";
 import config from "./../../app/config.js";
 import EditForm from "./Edit.js";
+import notify from "../../app/notify.js";
 
 export default {
     data: function () {
@@ -18,14 +19,6 @@ export default {
         'EditForm': EditForm,
     },
     methods: {
-        showNotice(notice, noticeType, time) {
-            if(time == null) time = 5000;
-            EventBus.$emit('notice', {
-                'notice': notice,
-                'noticeType': noticeType,
-                'time': time
-            });
-        },
         showEditForm(task){
             this.editFormActive = true;
             this.taskForEditing = task;
@@ -51,14 +44,14 @@ export default {
                         this.situations = object.situations;
                     } else {
                         this.busy = false;
-                        // this.showNotice(object.message, 'error');
+                        // notify.notify(object.message, 'error');
                         EventBus.$emit('HANDLE_REQUEST_ERROR', {response, object});
                     }
                 });
             })
             .catch(error => {
                 this.busy = false;
-                this.showNotice('Your request failed. Please try again in a few seconds.', 'error');
+                notify.notify('Your request failed. Please try again in a few seconds.', 'error');
             });
         }
     },

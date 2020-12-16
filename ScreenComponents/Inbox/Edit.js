@@ -1,3 +1,4 @@
+import notify from "../../app/notify.js";
 import config from "./../../app/config.js";
 import EventBus from "./../../app/EventBus.js";
 
@@ -12,14 +13,6 @@ export default {
     computed: {
     },
     methods: {
-        showNotice(notice, noticeType, time) {
-            if(time == null) time = 5000;
-            EventBus.$emit('notice', {
-                'notice': notice,
-                'noticeType': noticeType,
-                'time': time
-            });
-        },
         closeModal () {
             this.$emit('update:editFormActive', false)
             this.$emit('update:task', null)
@@ -29,7 +22,7 @@ export default {
             this.tasks = object.tasks;
             this.situations = object.situations;
             this.closeModal();
-            this.showNotice(object.message,'success');
+            notify.notify(object.message,'success');
         },
         updateTask() {
             this.busy = true;
@@ -52,14 +45,14 @@ export default {
                         this.updateTaskSuccess(object);
                     } else {
                         this.busy = false;
-                        // this.showNotice(object.message, 'error');
+                        // notify.notify(object.message, 'error');
                         EventBus.$emit('HANDLE_REQUEST_ERROR', {response, object});
                     }
                 });
             })
             .catch(error => {
                 this.busy = false;
-                this.showNotice('Your request failed. Please try again in a few seconds.', 'error');
+                notify.notify('Your request failed. Please try again in a few seconds.', 'error');
             });
         }
     },

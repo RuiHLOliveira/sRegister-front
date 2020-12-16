@@ -10,12 +10,13 @@ export default {
     computed: {
     },
     created () {
-        EventBus.$on('notice', (data) => {
+        EventBus.$on('NOTICEBOX_NOTICE', (data) => {
             this.showNotice(data.notice, data.noticeType, data.time);
         });
     },
     methods: {
         showNotice(notice, noticeType, time){
+            if(time == null) time = 5000;
             let vue = this;
             vue.notice = notice;
             vue.noticeType = noticeType;
@@ -23,7 +24,7 @@ export default {
                 vue.notice = '';
                 vue.noticeType = '';
             }, time);
-        }
+        },
     },
     template: `
     <div class="noticeBox" 
@@ -33,5 +34,6 @@ export default {
                 success: noticeType == 'success'
             }">{{notice}}</div>
     </div>
-    `
+    `,
+
 };

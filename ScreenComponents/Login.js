@@ -1,5 +1,7 @@
 import EventBus from "./../app/EventBus.js";
 import config from "./../app/config.js";
+import request from "./../app/request.js";
+import notify from "./../app/notify.js";
 
 export default {
     data: function () {
@@ -16,18 +18,27 @@ export default {
     },
     methods: {
         login(){
-            this.busy = true;
-            const headers = new Headers();
-            headers.append("Content-Type", "application/json");
-            const data = JSON.stringify({
-                'email': this.email,
-                'password': this.password
-            });
 
-            fetch(config.serverUrl + "/auth/login",{
-                headers: headers,
-                method: "POST",
-                body: data
+            const exception = (error) => {
+                console.error(error);
+                this.busy = false;
+                notify.notify('Your request failed. Please try again in a few seconds.', 'error');
+            };
+
+            this.busy = true;
+            request.fetch({
+                'url' : config.serverUrl + "/auth/login",
+                'method': "POST",
+                'headers': [
+                    {
+                        'name': 'Content-Type',
+                        'value': 'application/json'
+                    }
+                ],
+                'data': {
+                    'email': this.email,
+                    'password': this.password
+                }
             })
             .then(response => {
                 response.json().then(object => {
@@ -36,29 +47,22 @@ export default {
                         window.localStorage.sRegisterToken = object.token;
                         window.localStorage.sRegisterRefreshToken = object.refresh_token;
                         console.log(window.localStorage.sRegisterRefreshToken);
-                        this.showNotice(object.message,'success');
+                        notify.notify(object.message,'success');
                         EventBus.$emit('route','Home');
                     } else {
                         this.busy = false;
                         EventBus.$emit('HANDLE_REQUEST_ERROR', {response, object});
-                        // this.showNotice(object.message, 'error');
+                        // notify.notify(object.message, 'error');
                     }
+                })
+                .catch(error => {
+                    exception(error)
                 });
             })
             .catch(error => {
-                this.busy = false;
-                this.showNotice('Your request failed. Please try again in a few seconds.', 'error');
+                exception(error);
             });
-            this.busy = false;
         },
-        showNotice(notice, noticeType, time) {
-            if(time == null) time = 5000;
-            EventBus.$emit('notice', {
-                'notice': notice,
-                'noticeType': noticeType,
-                'time': time
-            });
-        }
     },
     template: `
     <div class="flexWrapper">

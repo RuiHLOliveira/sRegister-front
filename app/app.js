@@ -3,6 +3,7 @@ import routing from "./routing.js";
 import ApplicationMenu from './../SpecificComponents/Nav.js';
 import noticeBox from "./../Components/NoticeBox.js";
 import config from "./../../app/config.js";
+import notify from "./notify.js";
 
 Vue.component('application-menu', ApplicationMenu);
 Vue.component('notice-box', noticeBox);
@@ -58,15 +59,6 @@ const vm = new Vue({
                 this.routeTo('Login');
             }
         },
-        showNotice(notice, noticeType, time){
-            let vue = this;
-            vue.notice = notice;
-            vue.noticeType = noticeType;
-            setTimeout(function () {
-                vue.notice = '';
-                vue.noticeType = '';
-            }, time);
-        },
         refreshToken(){
             const headers = new Headers();
             headers.append("Content-Type", "application/json");
@@ -90,12 +82,12 @@ const vm = new Vue({
                         // EventBus.$emit('route','Home');
                     } else {
                         this.runAction('logout');
-                        this.showNotice('Session expired, please login again', 'error');
+                        notify.notify('Session expired, please login again', 'error');
                     }
                 });
             })
             .catch(error => {
-                this.showNotice('Your request failed. Please try again in a few seconds.', 'error');
+                notify.notify('Your request failed. Please try again in a few seconds.', 'error');
             });
         },
     },
@@ -105,7 +97,7 @@ const vm = new Vue({
             data.response.status == 401){
                 this.refreshToken();
             } else {
-                this.showNotice(object.message, 'error');
+                notify.notify(data.object.message, 'error');
             }
         });
         EventBus.$on('route',(data) => {
