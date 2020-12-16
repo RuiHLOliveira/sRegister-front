@@ -19,8 +19,6 @@ export default {
         },
         updateTaskSuccess (object) {
             this.busy = false;
-            this.tasks = object.tasks;
-            this.situations = object.situations;
             this.closeModal();
             notify.notify(object.message,'success');
         },

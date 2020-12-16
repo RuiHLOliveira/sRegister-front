@@ -6,7 +6,6 @@ export default {
             noticeType: '',
         }
     },
-    // props: ['notice', 'noticeType'],
     computed: {
     },
     created () {
@@ -25,6 +24,10 @@ export default {
                 vue.noticeType = '';
             }, time);
         },
+        close() {
+            this.notice = '';
+            this.noticeType = '';
+        }
     },
     template: `
     <div class="noticeBox" 
@@ -32,7 +35,12 @@ export default {
         <div class="noticeBoxContainer" :class="{
                 error: noticeType == 'error',
                 success: noticeType == 'success'
-            }">{{notice}}</div>
+            }">
+            <div class="noticeBox_closeButton" @click="close()">
+                <i class="fas fa-times"></i>
+            </div>
+            {{notice}}
+        </div>
     </div>
     `,
 
