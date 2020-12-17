@@ -53,7 +53,6 @@ body {
     position: absolute;
     top: 10px;
     right: 20px;
-    background-color: #ff000055;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -197,12 +196,6 @@ body {
     max-width: 100vw;
 }
 
-.taskInfo{
-    border-bottom: 1px solid #00000011;
-    padding-left: 5px;
-    padding-bottom: 10px;
-}
-
 
 /* .carrinho_item {
     display: grid;
@@ -338,6 +331,13 @@ nav#sidebar ul li button:hover {
     margin-top: 10px;
     margin-bottom: 10px;
     box-shadow: 0px 2px 5px rgba(0,0,0,.2);
+}
+
+.taskInfo{
+    border-bottom: 1px solid #00000011;
+    padding-left: 5px;
+    padding-bottom: 10px;
+    padding-top: 10px;
 }
 
 /* // Extra small devices (portrait phones, less than 576px)
