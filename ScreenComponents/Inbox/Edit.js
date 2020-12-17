@@ -6,7 +6,7 @@ export default {
     data: function () {
       return {
             busy: true,
-            selected: null,
+            targetSituation: null,
         }
     },
     props: ['editFormActive','task', 'situations'],
@@ -19,6 +19,11 @@ export default {
         },
         updateTaskSuccess (object) {
             this.busy = false;
+            //set new situation as defined by this.targetSituation
+            let newSituation = this.situations.find( situation => {
+                return situation.id === this.targetSituation
+            },this);
+            this.task.situation = newSituation;
             this.closeModal();
             notify.notify(object.message,'success');
         },
@@ -31,6 +36,7 @@ export default {
                 'name': this.task.name,
                 'duedate': this.task.duedate,
                 'description': this.task.description,
+                'targetSituation': this.targetSituation
             });
             fetch(config.serverUrl + `/api/tasks/${this.task.id}`, {
                 headers: headers,
@@ -52,6 +58,14 @@ export default {
                 this.busy = false;
                 notify.notify('Your request failed. Please try again in a few seconds.', 'error');
             });
+        }
+    },
+    watch: {
+        // whenever editFormActive changes, this function will run
+        editFormActive: function (newProp, oldProp) {
+            if(newProp && !oldProp) {
+                this.targetSituation = this.task.situation.id;
+            }
         }
     },
     created () {
@@ -102,14 +116,12 @@ export default {
                 <div class="row">
                     <div class="col">
                         <label for="situation">Situation</label>
-                        <span>{{selected}}</span>
-                        <select class="form-control" name="targetSituation" id="situation">
+                        <select v-model="targetSituation" class="form-control" name="targetSituation" id="situation">
                             <option disabled selected value="">--</option>
                             <option 
                                 v-for="situation in situations"
                                 :key="situation.id"
                                 :value="situation.id"
-                                :selected="true"
                             >{{situation.situation}}</option>
                         </select>
                     </div>
