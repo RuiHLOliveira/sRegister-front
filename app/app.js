@@ -65,16 +65,13 @@ const vm = new Vue({
             const data = JSON.stringify({
                 'refresh_token': window.localStorage.sRegisterRefreshToken
             });
-
             fetch(config.serverUrl + "/auth/refreshToken",{
                 headers: headers,
                 method: "POST",
                 body: data
             })
             .then(response => {
-                console.log(response);
                 response.json().then(object => {
-                    console.log(object);
                     if(response.ok) {
                         window.localStorage.sRegisterToken = object.token;
                         window.localStorage.sRegisterRefreshToken = object.refresh_token;
@@ -82,7 +79,9 @@ const vm = new Vue({
                         // EventBus.$emit('route','Home');
                     } else {
                         this.runAction('logout');
-                        notify.notify('Session expired, please login again', 'error');
+                        setTimeout(function () {
+                            notify.notify('Session expired, please login again', 'error');
+                        }, 200);
                     }
                 });
             })
