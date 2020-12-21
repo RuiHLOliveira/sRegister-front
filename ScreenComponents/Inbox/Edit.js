@@ -58,6 +58,37 @@ export default {
                 this.busy = false;
                 notify.notify('Your request failed. Please try again in a few seconds.', 'error');
             });
+        },
+        transformInProject(){
+            this.busy = true;
+            const headers = new Headers();
+            headers.append("Content-Type", "application/json");
+            headers.append("Authorization", window.localStorage.sRegisterToken);
+            const data = JSON.stringify({
+            });
+            fetch(config.serverUrl + `/api/tasks/${this.task.id}/taskToProject`, {
+                headers: headers,
+                method: "POST",
+                body: data
+            })
+            .then(response => {
+                response.json().then(object => {
+                    if(response.ok) {
+                        // this.updateTaskSuccess(object);
+                        notify.notify(object.message, 'success');
+                        console.log('sucesso', object);
+                    } else {
+                        this.busy = false;
+                        // notify.notify(object.message, 'error');
+                        EventBus.$emit('HANDLE_REQUEST_ERROR', {response, object});
+                    }
+                });
+            })
+            .catch(error => {
+                this.busy = false;
+                console.error(error);
+                notify.notify('Your request failed. Please try again in a few seconds.', 'error');
+            });
         }
     },
     watch: {
@@ -90,7 +121,7 @@ export default {
 
                 <div class="row">
                     <div class="col">
-                        <button class="btn btn-info" @click="alert('implementar')">Transform in project</button>
+                        <button class="btn btn-info" @click="transformInProject()">Transform in project</button>
                         <button class="btn btn-success" @click="alert('implementar')">Complete task</button>
                     </div>
                 </div>
