@@ -1,6 +1,7 @@
 import EventBus from "./../../app/EventBus.js";
 import config from "./../../app/config.js";
 import EditForm from "./Edit.js";
+import CreateForm from "./Create.js";
 import notify from "../../app/notify.js";
 
 export default {
@@ -8,20 +9,34 @@ export default {
       return {
             busy: true,
             tasks: [],
+            createdTask: null,
             situations: [],
             editFormActive: false,
+            createFormActive: false,
             taskForEditing: {},
+        }
+    },
+    watch: {
+        createdTask: function (newValue, oldValue) {
+            console.log(newValue,oldValue);
+            if(newValue != null && oldValue == null) {
+                this.tasks.unshift(newValue);
+            }
         }
     },
     computed: {
     },
     components: {
         'EditForm': EditForm,
+        'CreateForm': CreateForm
     },
     methods: {
         showEditForm(task){
             this.editFormActive = true;
             this.taskForEditing = task;
+        },
+        showCreateForm() {
+            this.createFormActive = true;
         },
         loadInbox() {
             this.busy = true;
@@ -39,6 +54,7 @@ export default {
             .then(response => {
                 response.json().then(object => {
                     if(response.ok) {
+                        console.log(object);
                         this.busy = false;
                         this.tasks = object.tasks;
                         this.situations = object.situations;
@@ -64,27 +80,41 @@ export default {
         <div class="container">
 
             <h1 class="taskInfo">Inbox</h1>
+            <button 
+                @click="showCreateForm()"
+                class="mt-2 btn btn-primary"
+            >New</button>
             
-            <div class="taskContainer" v-for="task in tasks" :key="task.id">
-                <div class="taskInfo">{{task.name}}</div>
-                <div class="taskInfo">{{task.situation.situation}}</div>
-                <div class="taskInfo">{{task.readableDuedate}}</div>
-                <div class="taskInfo">{{task.description}}</div>
-                <div class="taskInfo small">belongs to {{task.user.username}}</div>
+            <div class="loader" v-if="busy"></div>
 
-                <button 
-                    @click="showEditForm(task)"
-                    class="mt-2 btn btn-primary"
-                >edit</button>
+            <div v-else>
+                <div class="taskContainer" v-for="task in tasks" :key="task.id">
+                    <div class="taskInfo">{{task.name}}</div>
+                    <div class="taskInfo">{{task.situation.situation}}</div>
+                    <div class="taskInfo">{{task.readableDuedate}}</div>
+                    <div class="taskInfo">{{task.description}}</div>
+                    <div class="taskInfo small">belongs to {{task.user.username}}</div>
+
+                    <button 
+                        @click="showEditForm(task)"
+                        class="mt-2 btn btn-primary"
+                    >edit</button>
+                </div>
+
+                <div v-if="tasks.length == 0">There is no tasks!</div>
+
+                <create-form 
+                    :createFormActive.sync="createFormActive"
+                    :createdTask.sync="createdTask"
+                ></create-form>
+
+                <edit-form 
+                    :editFormActive.sync="editFormActive"
+                    :task.sync="taskForEditing"
+                    :situations="situations"
+                ></edit-form>
             </div>
 
-            <edit-form 
-                :editFormActive.sync="editFormActive"
-                :task.sync="taskForEditing"
-                :situations="situations"
-            ></edit-form>
-
-            <div class="loader" v-if="busy"></div>
             <notice-box></notice-box>
         </div>
     </div>
