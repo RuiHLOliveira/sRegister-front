@@ -7,6 +7,13 @@ import notify from "./notify.js";
 
 Vue.component('application-menu', ApplicationMenu);
 Vue.component('notice-box', noticeBox);
+Vue.directive('focus', {
+    // Quando o elemento vinculado é inserido no DOM...
+    inserted: function (el) {
+      // Coloque o foco no elemento
+      el.focus()
+    }
+});
 
 const vm = new Vue({
     el: "#app",
@@ -23,7 +30,7 @@ const vm = new Vue({
             if(actionName == 'logout') {
                 this.logout();
             } else {
-                console.log('unsuported action: ', actionName);
+                console.error('unsuported action: ', actionName);
             }
         },
         logout () {

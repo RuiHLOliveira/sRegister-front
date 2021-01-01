@@ -17,10 +17,10 @@ export default {
         }
     },
     watch: {
+        //adds the new task to the tasks array when the old createdTask value was null and the new value isnt null
         createdTask: function (newValue, oldValue) {
-            console.log(newValue,oldValue);
             if(newValue != null && oldValue == null) {
-                this.tasks.unshift(newValue);
+                this.tasks.unshift(newValue);//adds the new task to the tasklist
             }
         }
     },
@@ -34,7 +34,12 @@ export default {
         assignUpdatedTask(updatedTask) {
             this.tasks.forEach((task, index) => {
                 if(task.id == updatedTask.id) {
-                    this.tasks[index] = Object.assign({},updatedTask);
+                    if(updatedTask.transformedInProject) {
+                        this.tasks.splice(index,1);
+                    } else {
+                        this.tasks[index] = Object.assign({},updatedTask);
+
+                    }
                 }
             });
         },
