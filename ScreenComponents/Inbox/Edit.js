@@ -6,7 +6,7 @@ export default {
     data: function () {
       return {
             busy: true,
-            targetSituation: null,
+            localTask: null,
         }
     },
     props: ['editFormActive','task', 'situations'],
@@ -14,16 +14,20 @@ export default {
     },
     methods: {
         closeModal () {
-            this.$emit('update:editFormActive', false)
-            this.$emit('update:task', null)
+            this.$emit('update:editFormActive', false);
+            this.localTask = null
+        },
+        assignUpdatedTask(){
+            this.$emit('update:task', this.localTask);
         },
         updateTaskSuccess (object) {
             this.busy = false;
-            //set new situation as defined by this.targetSituation
+            //set new situation as defined by this.localTask.situation.id
             let newSituation = this.situations.find( situation => {
-                return situation.id === this.targetSituation
+                return situation.id === this.localTask.situation.id
             },this);
-            this.task.situation = newSituation;
+            this.localTask.situation = newSituation;
+            this.assignUpdatedTask();
             this.closeModal();
             notify.notify(object.message,'success');
         },
@@ -33,12 +37,12 @@ export default {
             headers.append("Content-Type", "application/json");
             headers.append("Authorization", window.localStorage.sRegisterToken);
             const data = JSON.stringify({
-                'name': this.task.name,
-                'duedate': this.task.duedate,
-                'description': this.task.description,
-                'targetSituation': this.targetSituation
+                'name': this.localTask.name,
+                'duedate': this.localTask.duedate,
+                'description': this.localTask.description,
+                'targetSituation': this.localTask.situation.id
             });
-            fetch(config.serverUrl + `/api/tasks/${this.task.id}`, {
+            fetch(config.serverUrl + `/api/tasks/${this.localTask.id}`, {
                 headers: headers,
                 method: "PUT",
                 body: data
@@ -66,7 +70,7 @@ export default {
             headers.append("Authorization", window.localStorage.sRegisterToken);
             const data = JSON.stringify({
             });
-            fetch(config.serverUrl + `/api/tasks/${this.task.id}/taskToProject`, {
+            fetch(config.serverUrl + `/api/tasks/${this.localTask.id}/taskToProject`, {
                 headers: headers,
                 method: "POST",
                 body: data
@@ -89,13 +93,17 @@ export default {
                 console.error(error);
                 notify.notify('Your request failed. Please try again in a few seconds.', 'error');
             });
+        },
+        setTaskFormData(){
+            // this.targetSituation = this.task.situation.id;
+            this.localTask = Object.assign({},this.task);
         }
     },
     watch: {
         // whenever editFormActive changes, this function will run
         editFormActive: function (newProp, oldProp) {
             if(newProp && !oldProp) {
-                this.targetSituation = this.task.situation.id;
+                this.setTaskFormData();
             }
         }
     },
@@ -115,7 +123,7 @@ export default {
 
                 <div class="row">
                     <div class="col">
-                        <div class="taskInfo">{{task.situation.situation}}</div>
+                        <div class="taskInfo">{{localTask.situation.situation}}</div>
                     </div>
                 </div>
 
@@ -128,26 +136,26 @@ export default {
 
                 <div class="row">
                     <div class="col">
-                        <input class="form-control" type="text" placeholder="name" v-model="task.name" />
+                        <input class="form-control" type="text" placeholder="name" v-model="localTask.name" />
                     </div>
                 </div>
 
                 <div class="row">
                     <div class="col">
-                        <input class="form-control" type="date" placeholder="duedate" v-model="task.duedate" />
+                        <input class="form-control" type="date" placeholder="duedate" v-model="localTask.duedate" />
                     </div>
                 </div>
 
                 <div class="row">
                     <div class="col">
-                        <textarea class="form-control" rows="3" name="description" v-model="task.description"></textarea>
+                        <textarea class="form-control" rows="3" name="description" v-model="localTask.description"></textarea>
                     </div>
                 </div>
 
                 <div class="row">
                     <div class="col">
                         <label for="situation">Situation</label>
-                        <select v-model="targetSituation" class="form-control" name="targetSituation" id="situation">
+                        <select v-model="localTask.situation.id" class="form-control" name="targetSituation" id="situation">
                             <option disabled selected value="">--</option>
                             <option 
                                 v-for="situation in situations"
