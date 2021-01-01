@@ -14,6 +14,7 @@ export default {
             editFormActive: false,
             createFormActive: false,
             taskForEditing: {},
+            showCompletedTasks: false
         }
     },
     watch: {
@@ -44,6 +45,7 @@ export default {
             });
         },
         fillReadableDuedate(task){
+                console.log(task);
                 if(task.duedate !== null) {
                     task.readableDuedate = moment(new Date(task.duedate)).format('ddd, MMM Mo YYYY');
                 }
@@ -109,15 +111,38 @@ export default {
                 class="mt-2 btn btn-primary"
             >New</button>
             
+            <div class="float-right mt-3 custom-control custom-checkbox mr-sm-2">
+                <input type="checkbox" class="custom-control-input" id="showCompletedTasks" v-model="showCompletedTasks">
+                <label class="custom-control-label" for="showCompletedTasks">Show completed tasks</label>
+            </div>
+            
             <div class="loader" v-if="busy"></div>
 
             <div v-else>
-                <div class="taskContainer" v-for="task in tasks" :key="task.id">
-                    <div class="taskInfo">{{task.name}}</div>
-                    <div class="taskInfo">{{task.situation.situation}}</div>
-                    <div class="taskInfo">{{task.readableDuedate}}</div>
-                    <div class="taskInfo">{{task.description}}</div>
-                    <div class="taskInfo small">belongs to {{task.user.username}}</div>
+                <div class="taskContainer" 
+                    v-for="task in tasks" :key="task.id"
+                    :class="{completedTaskContainer: task.completed}"
+                    v-if="!task.completed || (task.completed && showCompletedTasks)"
+                >
+                    <div>
+                        <label class="taskFieldName">Name</label>
+                        <div class="taskInfo">{{task.name}}</div>
+                    </div>
+
+                    <div>
+                        <label class="taskFieldName">Situation</label>
+                        <div class="taskInfo">{{task.situation.situation}}</div>
+                    </div>
+
+                    <div v-if="task.readableDuedate">
+                        <label class="taskFieldName">Due in</label>
+                        <div class="taskInfo">{{task.readableDuedate}}</div>
+                    </div>
+
+                    <div v-if="task.description">
+                        <label class="taskFieldName">Description</label>
+                        <div class="taskInfo textareaWhitespacePreWrap">{{task.description}}</div>
+                    </div>
 
                     <button 
                         @click="showEditForm(task)"

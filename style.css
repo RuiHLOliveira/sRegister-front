@@ -336,11 +336,28 @@ nav#sidebar ul li button:hover {
     box-shadow: 0px 2px 5px rgba(0,0,0,.2);
 }
 
+.completedTaskContainer{
+    background-color:rgb(224, 255, 226);
+}
+
+.taskFieldName{
+    margin: 0;
+    padding-left: 5px;
+}
+
 .taskInfo{
     border-bottom: 1px solid #00000011;
     padding-left: 5px;
-    padding-bottom: 10px;
-    padding-top: 10px;
+    margin-bottom: 10px;
+}
+
+label {
+    font-size: 80%;
+    color: #707070;
+}
+
+.textareaWhitespacePreWrap{
+    white-space: pre-wrap;
 }
 
 /* // Extra small devices (portrait phones, less than 576px)
