@@ -11,7 +11,7 @@ export default {
     template: `
     <div class="flexWrapper">
         <application-menu v-on:action="$emit('action',$event)"></application-menu>
-        <div class="container">
+        <div class="mainContainer">
             Welcome, {{userName}}
         </div>
     </div>

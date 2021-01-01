@@ -174,7 +174,7 @@ body {
     flex-direction: column;
     top: 0px;
     left: 0px;
-    width: 100vw;
+    height: auto;
     padding: 20px;
 }
 
@@ -264,6 +264,7 @@ nav#sidebar {
     background: var(--blue);
     width: 150px;
     height: 100vh;
+    position: fixed;
     /* margin-right: 50px; */
 }
 
@@ -314,11 +315,13 @@ nav#sidebar ul li button:hover {
 
 .flexWrapper{
     display: flex;
+    
 }
 
-.container {
+.mainContainer {
     width: 100%;
     margin: 0 auto;
+    margin-left: 150px;
     background-color: #eeeeee55;
     /* background-color: #eeeeee; */
     padding: 20px;

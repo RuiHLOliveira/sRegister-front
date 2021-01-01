@@ -69,7 +69,7 @@ export default {
 
         <application-menu></application-menu>
 
-        <div class="container">
+        <div class="mainContainer">
             <form @submit.prevent="login">
                 <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
 
