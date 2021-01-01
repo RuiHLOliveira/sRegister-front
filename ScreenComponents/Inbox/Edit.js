@@ -98,16 +98,43 @@ export default {
                 notify.notify('Your request failed. Please try again in a few seconds.', 'error');
             });
         },
-        setTaskFormData(){
-            // this.targetSituation = this.task.situation.id;
-            this.localTask = Object.assign({},this.task);
+        completeTask() {
+            this.busy = true;
+            const headers = new Headers();
+            headers.append("Content-Type", "application/json");
+            headers.append("Authorization", window.localStorage.sRegisterToken);
+            const data = JSON.stringify({
+            });
+            fetch(config.serverUrl + `/api/tasks/${this.localTask.id}/completeTask`, {
+                headers: headers,
+                method: "POST",
+                body: data
+            })
+            .then(response => {
+                response.json().then(object => {
+                    if(response.ok) {
+                        console.log(this.localTask);
+                        this.localTask.completed = true;
+                        this.localTask['message'] = object.message;
+                        this.updateTaskSuccess(this.localTask);
+                    } else {
+                        this.busy = false;
+                        EventBus.$emit('HANDLE_REQUEST_ERROR', {response, object});
+                    }
+                });
+            })
+            .catch(error => {
+                this.busy = false;
+                console.error(error);
+                notify.notify('Your request failed. Please try again in a few seconds.', 'error');
+            });
         }
     },
     watch: {
         // whenever editFormActive changes, this function will run
         editFormActive: function (newProp, oldProp) {
             if(newProp && !oldProp) {
-                this.setTaskFormData();
+                this.localTask = Object.assign({},this.task);
             }
         }
     },
@@ -134,25 +161,28 @@ export default {
                 <div class="row">
                     <div class="col">
                         <button class="btn btn-info" @click="transformInProject()">Transform in project</button>
-                        <button class="btn btn-success" @click="alert('implementar')">Complete task</button>
+                        <button class="btn btn-success" @click="completeTask()">Complete task</button>
                     </div>
                 </div>
 
                 <div class="row">
                     <div class="col">
-                        <input class="form-control" type="text" placeholder="name" v-model="localTask.name" />
+                        <label for="name">Name</label>
+                        <input name="name" class="form-control" type="text" placeholder="name" v-model="localTask.name" />
                     </div>
                 </div>
 
                 <div class="row">
                     <div class="col">
-                        <input class="form-control" type="date" placeholder="duedate" v-model="localTask.duedate" />
+                        <label for="duedate">Due in</label>
+                        <input name="duedate" class="form-control" type="date" placeholder="duedate" v-model="localTask.duedate" />
                     </div>
                 </div>
 
                 <div class="row">
                     <div class="col">
-                        <textarea class="form-control" rows="3" name="description" v-model="localTask.description"></textarea>
+                        <label for="description">Description</label>
+                        <textarea name="description" class="form-control" rows="3" name="description" v-model="localTask.description"></textarea>
                     </div>
                 </div>
 
@@ -169,8 +199,6 @@ export default {
                         </select>
                     </div>
                 </div>
-
-                colocar em projeto
 
                 <button class="btn btn-danger" @click="closeModal()">Cancel</button>
                 <button class="btn btn-success" @click="updateTask()">Save</button>
