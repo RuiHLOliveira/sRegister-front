@@ -35,13 +35,25 @@ export default {
             this.tasks.forEach((task, index) => {
                 if(task.id == updatedTask.id) {
                     if(updatedTask.transformedInProject) {
-                        this.tasks.splice(index,1);
+                        this.tasks.splice(index,1); //removes the task from list
                     } else {
+                        updatedTask = this.fillReadableDuedate(updatedTask);
                         this.tasks[index] = Object.assign({},updatedTask);
-
                     }
                 }
             });
+        },
+        fillReadableDuedate(task){
+                if(task.duedate !== null) {
+                    task.readableDuedate = moment(new Date(task.duedate)).format('ddd, MMM Mo YYYY');
+                }
+                return task;
+        },
+        fillReadableDuedateArray(taskArray){
+            for (let index = 0; index < taskArray.length; index++) {
+                taskArray[index] = this.fillReadableDuedate(taskArray[index]);
+            }
+            return taskArray;
         },
         showEditForm(task){
             this.editFormActive = true;
@@ -67,6 +79,7 @@ export default {
                 response.json().then(object => {
                     if(response.ok) {
                         this.busy = false;
+                        object.tasks = this.fillReadableDuedateArray(object.tasks);
                         this.tasks = object.tasks;
                         this.situations = object.situations;
                     } else {
