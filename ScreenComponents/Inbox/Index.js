@@ -31,6 +31,13 @@ export default {
         'CreateForm': CreateForm
     },
     methods: {
+        assignUpdatedTask(updatedTask) {
+            this.tasks.forEach((task, index) => {
+                if(task.id == updatedTask.id) {
+                    this.tasks[index] = Object.assign({},updatedTask);
+                }
+            });
+        },
         showEditForm(task){
             this.editFormActive = true;
             this.taskForEditing = task;
@@ -54,7 +61,6 @@ export default {
             .then(response => {
                 response.json().then(object => {
                     if(response.ok) {
-                        console.log(object);
                         this.busy = false;
                         this.tasks = object.tasks;
                         this.situations = object.situations;
@@ -110,7 +116,8 @@ export default {
 
                 <edit-form 
                     :editFormActive.sync="editFormActive"
-                    :task.sync="taskForEditing"
+                    :task="taskForEditing"
+                    v-on:update:task="assignUpdatedTask($event)"
                     :situations="situations"
                 ></edit-form>
             </div>
