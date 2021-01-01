@@ -16,6 +16,8 @@ export default {
     methods: {
         closeModal () {
             this.$emit('update:createFormActive', false)
+            this.newTask = null;
+            this.taskName = null;
         },
         assignCreatedTask(){
             this.$emit('update:createdTask', this.newTask)
@@ -64,26 +66,24 @@ export default {
     },
     template: `
     <div class="flexWrapper editForm modal" v-if="createFormActive">
-
-            <div class="modal_container lg form-group">
-                <div class="row">
-                    <div class="col">
-                        <h2 class="taskInfo">New Task</h2>
-                    </div>
+        <div class="modal_container lg form-group">
+            <div class="row">
+                <div class="col">
+                    <h2 class="taskInfo">New Task</h2>
                 </div>
-
-                <div class="row">
-                    <div class="col">
-                        <input class="form-control" type="text" placeholder="name" v-model="taskName" />
-                    </div>
-                </div>
-
-                <button class="btn btn-danger" @click="closeModal()">Cancel</button>
-                <button class="btn btn-success" @click="createTask()">Save</button>
-
-                <div class="loader" v-if="busy"></div>
             </div>
 
+            <div class="row">
+                <div class="col">
+                    <input class="form-control" type="text" placeholder="name" id="taskName" v-model="taskName" v-focus @keyup.enter="createTask()"/>
+                </div>
+            </div>
+
+            <button class="btn btn-danger" @click="closeModal()">Cancel</button>
+            <button class="btn btn-success" @click="createTask()">Save</button>
+
+            <div class="loader" v-if="busy"></div>
+        </div>
     </div>
     `
 };

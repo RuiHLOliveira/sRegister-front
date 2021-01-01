@@ -27,6 +27,14 @@ export default {
                 return situation.id === this.localTask.situation.id
             },this);
             this.localTask.situation = newSituation;
+            this.localTask['transformedInProject'] = object.transformedInProject;
+            this.assignUpdatedTask();
+            this.closeModal();
+            notify.notify(object.message,'success');
+        },
+        transformInProjectSuccess(object) {
+            this.busy = false;
+            this.localTask['transformedInProject'] = object.transformedInProject;
             this.assignUpdatedTask();
             this.closeModal();
             notify.notify(object.message,'success');
@@ -53,7 +61,6 @@ export default {
                         this.updateTaskSuccess(object);
                     } else {
                         this.busy = false;
-                        // notify.notify(object.message, 'error');
                         EventBus.$emit('HANDLE_REQUEST_ERROR', {response, object});
                     }
                 });
@@ -78,12 +85,9 @@ export default {
             .then(response => {
                 response.json().then(object => {
                     if(response.ok) {
-                        // this.updateTaskSuccess(object);
-                        notify.notify(object.message, 'success');
-                        console.log('sucesso', object);
+                        this.updateTaskSuccess({'id': this.localTask.id, 'transformedInProject': true, 'message': object.message});
                     } else {
                         this.busy = false;
-                        // notify.notify(object.message, 'error');
                         EventBus.$emit('HANDLE_REQUEST_ERROR', {response, object});
                     }
                 });
