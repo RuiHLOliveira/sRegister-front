@@ -19,48 +19,42 @@ export default {
     methods: {
         login(){
 
-            const exception = (error) => {
-                console.error(error);
-                this.busy = false;
-                notify.notify('Your request failed. Please try again in a few seconds.', 'error');
-            };
+            // const exception = (error) => {
+            //     console.error(error);
+            //     this.busy = false;
+            //     notify.notify('Your request failed. Please try again in a few seconds.', 'error');
+            // };
 
             this.busy = true;
-            request.fetch({
-                'url' : config.serverUrl + "/auth/login",
-                'method': "POST",
-                'headers': [
-                    {
-                        'name': 'Content-Type',
-                        'value': 'application/json'
-                    }
-                ],
-                'data': {
-                    'email': this.email,
-                    'password': this.password
-                }
+
+            const failFunction = (response, json) => {
+                this.busy = false;
+                EventBus.$emit('HANDLE_REQUEST_ERROR', {response, json});
+            };
+
+            let requestData = {};
+            const headers = new Headers();
+            requestData['url'] = config.serverUrl + "/auth/login";
+            requestData['method'] = "POST";
+            requestData['headers'] = headers;
+            requestData['data'] = {
+                'email': this.email,
+                'password': this.password
+            };
+
+            request.fetch(requestData)
+            .then(([response,json]) => {
+                this.busy = false;
+                window.localStorage.sRegisterToken = json.token;
+                window.localStorage.sRegisterRefreshToken = json.refresh_token;
+                notify.notify(json.message,'success');
+                EventBus.$emit('route','Home');
             })
-            .then(response => {
-                response.json().then(object => {
-                    if(response.ok) {
-                        this.busy = false;
-                        window.localStorage.sRegisterToken = object.token;
-                        window.localStorage.sRegisterRefreshToken = object.refresh_token;
-                        console.log(window.localStorage.sRegisterRefreshToken);
-                        notify.notify(object.message,'success');
-                        EventBus.$emit('route','Home');
-                    } else {
-                        this.busy = false;
-                        EventBus.$emit('HANDLE_REQUEST_ERROR', {response, object});
-                        // notify.notify(object.message, 'error');
-                    }
-                })
-                .catch(error => {
-                    exception(error)
-                });
-            })
-            .catch(error => {
-                exception(error);
+            .catch((error) => {
+                console.error(error);
+                this.busy = false;
+                notify.notify(error,'erro');
+                // EventBus.$emit('HANDLE_REQUEST_ERROR', {response, json});
             });
         },
     },

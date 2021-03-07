@@ -3,6 +3,7 @@ import config from "./../../app/config.js";
 import EditForm from "./Edit.js";
 import CreateForm from "./Create.js";
 import notify from "../../app/notify.js";
+import request from "../../app/request.js";
 
 export default {
     data: function () {
@@ -45,7 +46,6 @@ export default {
             });
         },
         fillReadableDuedate(task){
-                console.log(task);
                 if(task.duedate !== null) {
                     task.readableDuedate = moment(new Date(task.duedate)).format('ddd, MMM Mo YYYY');
                 }
@@ -64,41 +64,31 @@ export default {
         showCreateForm() {
             this.createFormActive = true;
         },
-        loadInbox() {
+        loadTasks() {
             this.busy = true;
             const headers = new Headers();
+            let requestData = {};
             headers.append("Authorization", window.localStorage.sRegisterToken);
-            // const data = JSON.stringify({
-            //     'email': this.email,
-            //     'password': this.password
-            // });
-            fetch(config.serverUrl + "/api/tasks",{
-                headers: headers,
-                // method: "GET",
-                // body: data
-            })
-            .then(response => {
-                response.json().then(object => {
-                    if(response.ok) {
-                        this.busy = false;
-                        object.tasks = this.fillReadableDuedateArray(object.tasks);
-                        this.tasks = object.tasks;
-                        this.situations = object.situations;
-                    } else {
-                        this.busy = false;
-                        // notify.notify(object.message, 'error');
-                        EventBus.$emit('HANDLE_REQUEST_ERROR', {response, object});
-                    }
-                });
-            })
-            .catch(error => {
+
+            requestData['url'] = config.serverUrl + "/api/tasks";
+            requestData['headers'] = headers;
+            request.fetch(requestData)
+            .then(([response,json]) => {
                 this.busy = false;
-                notify.notify('Your request failed. Please try again in a few seconds.', 'error');
+                json.tasks = this.fillReadableDuedateArray(json.tasks);
+                this.tasks = json.tasks;
+                this.situations = json.situations;
+            })
+            .catch((error) => {
+                this.busy = false;
+                notify.notify(error,'error');
+                // EventBus.$emit('HANDLE_REQUEST_ERROR', {response, json});
             });
+
         }
     },
     created () {
-        this.loadInbox();
+        this.loadTasks();
     },
     template: `
     <div class="flexWrapper">

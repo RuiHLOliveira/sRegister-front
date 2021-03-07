@@ -70,6 +70,12 @@ export default {
                 </button>
             </li>
             <li v-if="userAuth">
+                <button @click="route('ProjectsIndex')">
+                    <i class="fas fa-plus"></i>
+                    Projects
+                </button>
+            </li>
+            <li v-if="userAuth">
                 <button @click="route('SituationsIndex')">
                     <i class="fas fa-align-justify"></i>
                     Situations

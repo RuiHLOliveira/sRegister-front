@@ -35,9 +35,9 @@ export default {
             const headers = new Headers();
             headers.append("Content-Type", "application/json");
             headers.append("Authorization", window.localStorage.sRegisterToken);
-            const data = JSON.stringify({
+            const data = {
                 'name': this.taskName,
-            });
+            };
             fetch(config.serverUrl + `/api/tasks`, {
                 headers: headers,
                 method: "POST",

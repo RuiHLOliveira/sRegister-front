@@ -4,6 +4,7 @@ import ApplicationMenu from './../SpecificComponents/Nav.js';
 import noticeBox from "./../Components/NoticeBox.js";
 import config from "./../../app/config.js";
 import notify from "./notify.js";
+import request from "./request.js";
 
 Vue.component('application-menu', ApplicationMenu);
 Vue.component('notice-box', noticeBox);
@@ -34,8 +35,34 @@ const vm = new Vue({
             }
         },
         logout () {
-            window.localStorage.sRegisterToken = '';
-            this.routeTo('Login');
+            this.busy = true;
+            //PREPARE REQUEST FOR LOGOUT
+            const headers = new Headers();
+            let requestData = {};
+            headers.append("Authorization", window.localStorage.sRegiserToken);
+            headers.append('Content-Type','application/json');
+            requestData['url'] = config.serverUrl + "/auth/logout";
+            requestData['method'] = "POST";
+            requestData['headers'] = headers;
+            requestData['data'] = {
+                'refresh_token': window.localStorage.sRegisterRefreshToken,
+                'token': window.localStorage.sRegisterToken
+            };
+            //RUN REQUEST FOR LOGOFF
+            request.fetch(requestData)
+            .then(([response,json]) => {
+                this.busy = false;
+                window.localStorage.sRegisterToken = '';
+                window.localStorage.sRegisterRefreshToken = '';
+                this.routeTo('Login');
+            })
+            .catch((error) => {
+                this.busy = false;
+                notify.notify(error,'error');
+                window.localStorage.sRegisterToken = '';
+                window.localStorage.sRegisterRefreshToken = '';
+                this.routeTo('Login');
+            });
         },
         findFullScreenComponentByHash(hash){
             let fullScreenComponent = routing.screenComponents.find( component => {
@@ -66,46 +93,8 @@ const vm = new Vue({
                 this.routeTo('Login');
             }
         },
-        refreshToken(){
-            const headers = new Headers();
-            headers.append("Content-Type", "application/json");
-            const data = JSON.stringify({
-                'refresh_token': window.localStorage.sRegisterRefreshToken
-            });
-            fetch(config.serverUrl + "/auth/refreshToken",{
-                headers: headers,
-                method: "POST",
-                body: data
-            })
-            .then(response => {
-                response.json().then(object => {
-                    if(response.ok) {
-                        window.localStorage.sRegisterToken = object.token;
-                        window.localStorage.sRegisterRefreshToken = object.refresh_token;
-                        alert('recebi o refresh token')
-                        // EventBus.$emit('route','Home');
-                    } else {
-                        this.runAction('logout');
-                        setTimeout(function () {
-                            notify.notify('Session expired, please login again', 'error');
-                        }, 200);
-                    }
-                });
-            })
-            .catch(error => {
-                notify.notify('Your request failed. Please try again in a few seconds.', 'error');
-            });
-        },
     },
     created () {
-        EventBus.$on('HANDLE_REQUEST_ERROR',(data) => {
-            if(!data.response.ok &&
-            data.response.status == 401){
-                this.refreshToken();
-            } else {
-                notify.notify(data.object.message, 'error');
-            }
-        });
         EventBus.$on('route',(data) => {
             this.routeTo(data);
         });

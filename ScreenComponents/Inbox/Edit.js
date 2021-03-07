@@ -105,6 +105,7 @@ export default {
             headers.append("Authorization", window.localStorage.sRegisterToken);
             const data = JSON.stringify({
             });
+            
             fetch(config.serverUrl + `/api/tasks/${this.localTask.id}/completeTask`, {
                 headers: headers,
                 method: "POST",
@@ -113,7 +114,6 @@ export default {
             .then(response => {
                 response.json().then(object => {
                     if(response.ok) {
-                        console.log(this.localTask);
                         this.localTask.completed = true;
                         this.localTask['message'] = object.message;
                         this.updateTaskSuccess(this.localTask);
@@ -182,7 +182,7 @@ export default {
                 <div class="row">
                     <div class="col">
                         <label for="description">Description</label>
-                        <textarea name="description" class="form-control" rows="3" name="description" v-model="localTask.description"></textarea>
+                        <textarea name="description" class="form-control" rows="3" v-model="localTask.description"></textarea>
                     </div>
                 </div>
 

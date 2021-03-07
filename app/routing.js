@@ -2,6 +2,7 @@
 import Login from "./../ScreenComponents/Login.js";
 import Home from "./../ScreenComponents/Home.js";
 import InboxIndex from "./../ScreenComponents/Inbox/Index.js";
+import ProjectsIndex from "./../ScreenComponents/Projects/Index.js";
 
 const page = '?page=';
 const NotFound = { template: '<p>404 Page not found</p>' };
@@ -11,6 +12,7 @@ const HomeScreenComponent = {
     name: 'Home',
     component: Home
 };
+
 export default {
     'screenComponents': [
         {
@@ -36,6 +38,12 @@ export default {
             hash: '#InboxIndex',
             name: 'InboxIndex',
             component: InboxIndex
+        },
+        {
+            route: `/${page}projectsIndex`,
+            hash: '#ProjectsIndex',
+            name: 'ProjectsIndex',
+            component: ProjectsIndex
         },
         HomeScreenComponent
     ],
