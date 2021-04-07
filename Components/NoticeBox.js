@@ -31,7 +31,7 @@ export default {
     },
     template: `
     <div class="noticeBox" 
-        :class="{ ativo: notice != '' }">
+        :class="{ active: notice != '' }">
         <div class="noticeBoxContainer" :class="{
                 error: noticeType == 'error',
                 success: noticeType == 'success'

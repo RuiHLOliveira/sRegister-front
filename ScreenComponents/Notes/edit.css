@@ -1,0 +1,32 @@
+.note_modal {
+    border: 1px solid #dedede;
+    border-radius: 10px;
+    padding: 10px;
+    min-width: 650px;
+}
+
+.name_edit {
+    border-radius: 0px;
+    border: 0px;/* solid #efefef; */
+    border-bottom: 1px solid #efefef;
+    padding: 0px 0px 0px 10px;
+}
+
+.name_edit:focus{
+    border: 0px;/* solid #efefef; */
+    border-bottom: 1px solid #efefef;
+    padding: 0px 0px 0px 10px;
+}
+.name_edit:focus,
+.content_edit:focus {
+    box-shadow: none;
+}
+
+.content_edit {
+    border-radius: 0px;
+    border: 0px;/* solid #efefef; */
+    padding: 0px 0px 0px 10px;
+    resize: none;
+    min-height: 100px;
+    max-height: 1080px;
+}

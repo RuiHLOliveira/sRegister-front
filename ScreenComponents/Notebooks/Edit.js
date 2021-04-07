@@ -113,7 +113,7 @@ export default {
         this.busy = false;
     },
     template: `
-    <div class="flexWrapper editForm modal" v-if="editFormActive">
+    <div class="flexWrapper editForm modal padding20px" v-if="editFormActive">
 
             <div class="modal_container lg form-group">
                 <div class="row">

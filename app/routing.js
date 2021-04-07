@@ -1,16 +1,15 @@
 
 import Login from "./../ScreenComponents/Login.js";
-import Home from "./../ScreenComponents/Home.js";
-import InboxIndex from "./../ScreenComponents/Inbox/Index.js";
-import ProjectsIndex from "./../ScreenComponents/Projects/Index.js";
+import NotebooksIndex from "./../ScreenComponents/Notebooks/Index.js";
+import NotesIndex from "./../ScreenComponents/Inbox/Index.js";
 
 const page = '?page=';
 const NotFound = { template: '<p>404 Page not found</p>' };
 const HomeScreenComponent = {
-    route: `/${page}home`,
-    hash: '#Home',
-    name: 'Home',
-    component: Home
+    route: `/${page}notebooksIndex`,
+    hash: '#notebooksIndex',
+    name: 'notebooksIndex',
+    component: NotebooksIndex
 };
 
 export default {
@@ -28,22 +27,16 @@ export default {
             component: Login
         },
         {
-            route: `/${page}home`,
-            hash: '#Home',
-            name: 'Home',
-            component: Home
+            route: `/${page}notebooksIndex`,
+            hash: '#notebooksIndex',
+            name: 'notebooksIndex',
+            component: NotebooksIndex
         },
         {
-            route: `/${page}inboxIndex`,
-            hash: '#InboxIndex',
-            name: 'InboxIndex',
-            component: InboxIndex
-        },
-        {
-            route: `/${page}projectsIndex`,
-            hash: '#ProjectsIndex',
-            name: 'ProjectsIndex',
-            component: ProjectsIndex
+            route: `/${page}notesIndex`,
+            hash: '#notesIndex',
+            name: 'notesIndex',
+            component: NotesIndex
         },
         HomeScreenComponent
     ],

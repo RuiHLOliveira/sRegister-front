@@ -90,7 +90,7 @@ export default {
     created () {
         this.loadTasks();
     },
-    template: `
+    template: /*jsx*/`
     <div class="flexWrapper">
         <application-menu v-on:action="$emit('action',$event)"></application-menu>
         <div class="mainContainer">

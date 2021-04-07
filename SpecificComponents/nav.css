@@ -1,0 +1,54 @@
+
+/* NAV BAR */
+nav#sidebar {
+    background: var(--blue);
+    width: 150px;
+    height: 100vh;
+    position: fixed;
+    /* margin-right: 50px; */
+}
+
+nav#sidebar > ul > li > span,
+nav#sidebar > ul > li > button,
+nav#sidebar > ul > li > a,
+nav#sidebar > ul > li > a:visited,
+nav > .sidebar-header > span
+{
+    display: block;
+    width:100%;
+    text-align: left;
+    
+    padding: 10px 10px;
+    margin: 0;
+    border: 0;
+    /* font-size: 1rem; */
+    
+    color: white;
+    background-color: #00000000;
+    cursor: pointer;
+}
+
+button i {
+    display: inline-block;
+    width: 20px;
+}
+
+nav .sidebar-header {
+    margin-bottom: 10px;
+}
+nav .sidebar-header span {
+    font-size: 110%;
+    text-align: center;
+}
+
+nav div.sidebarUserWelcome {
+    padding: 10px 10px;
+    margin-bottom: 10px;
+    border: 0;
+    color: white;
+    text-align: center;
+}
+
+nav#sidebar ul li button:hover {
+    background: #506388;
+}

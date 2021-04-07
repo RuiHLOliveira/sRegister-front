@@ -15,25 +15,9 @@ export default {
                 fetch(params.url, {
                     headers: params.headers,
                     method: params.method,
-                    body: data,
+                    body: data
                 })
                 .then( (response) => {
-                    if(!response.ok && response.status != 401) {
-                        console.log('caiu 1')
-                        console.log(response);
-                        response.json().then((json) => {
-                            console.log('caiu 1.1')
-                            console.log(json);
-                            reject(json.message)
-                        })
-                        .catch((error) => {
-                            console.log('caiu 1.2')
-                            console.log(error)
-                            console.log(response.text())
-                            reject(response)
-                        })
-                        return;
-                    }
                     response.json().then((json) => {
                         if(response.ok) {
                             //REQUEST SUCCESS
@@ -46,9 +30,6 @@ export default {
                                     this.requestRepeat(params)
                                     .then(([response,json]) => {
                                         resolve([response,json]);
-                                    })
-                                    .catch((error) => {
-                                        reject(error);
                                     });
                                 }).catch((error) => {
                                     //TOKEN REFRESH ERROR, QUIT
@@ -64,11 +45,9 @@ export default {
                         }
                     })
                 })
-                .catch ((error) => {
-                    reject(error);
-                })
             } catch (error) {
                 //NETWORK ERROR
+                // console.log(error);
                 reject(error);
             }
         });
@@ -116,6 +95,7 @@ export default {
         // params.headers.delete('Authorization');
         params.headers.set("Authorization", window.localStorage.sRegisterToken);
         if(params.method == 'POST' || params.method == 'PUT') {
+            debugger
             params.headers.append('Content-Type','application/json');
         }
 
@@ -127,16 +107,6 @@ export default {
                     body: data
                 })
                 .then( (response) => {
-                    if(!response.ok && response.status != 401) {
-                        console.log('caiu 2')
-                        response.json().then((json) => {
-                            reject(json.message)
-                        })
-                        .catch((error) => {
-                            reject(response)
-                        })
-                        return;
-                    }
                     response.json().then((json) => {
                         if(response.ok) {
                             //REQUEST SUCCESS
@@ -147,9 +117,6 @@ export default {
                             reject(json.message);
                         }
                     })
-                })
-                .catch ((error) => {
-                    reject(error);
                 })
             } catch (error) {
                 //NETWORK ERROR

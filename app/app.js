@@ -79,8 +79,23 @@ const vm = new Vue({
             if(fullScreenComponent === undefined) fullScreenComponent = routing.NotFoundScreenComponent
             return fullScreenComponent;
         },
+        isAuthenticated() {
+            if(window.localStorage.sRegisterToken === '' ||
+            window.localStorage.sRegisterToken === undefined){
+                return false;
+            }
+            return true;
+        },
         routeTo (screenComponentName){
-            const fullScreenComponent = this.findFullScreenComponent(screenComponentName);
+            console.log(screenComponentName)
+            let fullScreenComponent = this.findFullScreenComponent(screenComponentName);
+            if( (fullScreenComponent.needAuthentication == true) && (this.isAuthenticated() == false)) {
+                fullScreenComponent = this.findFullScreenComponent('Login');
+            }
+            if(fullScreenComponent.name == 'NotFound'){
+                notify.notify('Page Not Found','error');
+                return;
+            }
             this.currentScreenComponent = fullScreenComponent.component;
             // history.pushState({}, fullScreenComponent.name, fullScreenComponent.route);
             location.hash = fullScreenComponent.name;
