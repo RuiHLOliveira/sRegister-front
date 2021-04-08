@@ -1,12 +1,14 @@
 import notify from "../../app/notify.js";
-import config from "./../../app/config.js";
-import EventBus from "./../../app/EventBus.js";
+import config from "../../app/config.js";
+import EventBus from "../../app/EventBus.js";
 import request from "../../app/request.js";
 
 export default {
     data: function () {
       return {
             busy: true,
+            noteName: null,
+            newNote: null,
             localNote: null,
             localNoteName: null,
             localNoteContent: null,
@@ -14,74 +16,42 @@ export default {
             debounceTimer: [],
         }
     },
-    props: ['noteEditActive', 'note'],
+    props: ['noteCreateActive', 'createdNote'],
     computed: {
     },
     methods: {
         closeModal () {
-            this.$emit('update:noteEditActive', false);
-            this.localNote = null
+            this.$emit('update:noteCreateActive', false)
+            this.newNote = null;
+            this.noteName = null;
         },
-        assignUpdatedNote(){
-            this.$emit('update:note', this.localNote);
+        assignCreatedNote(){
+            this.$emit('update:createdNote', this.newNote)
         },
-        updateNoteSuccess (object) {
+        createdNoteSuccess (object) {
             this.busy = false;
-            this.assignUpdatedNote();
-            // this.closeModal();
-            // notify.notify(object.message,'success');
-        },
-        deletedNoteSuccess (object) {
-            this.busy = false;
-            this.assignUpdatedNote();
+            this.newNote = object.note;
+            this.assignCreatedNote();
             this.closeModal();
+            if(object.message == undefined) object.message = "Created a new note successfully!";
             notify.notify(object.message,'success');
         },
-        updateNote() {
+        createNote() {
+            console.log(this)
             this.busy = true;
-            this.localNote.name = this.localNoteName;
-            this.localNote.content = this.localNoteContent;
-            const headers = new Headers();
-            
             let requestData = {};
-            const data = {
-                'name': this.localNote.name,
-                'content': this.localNote.content,
+            const headers = new Headers();
+            requestData['url'] = config.serverUrl + `/api/${notebook}/notes`;
+            requestData['method'] = "POST";
+            requestData['headers'] = headers;
+            requestData ['data'] = {
+                'name': this.noteName,
             };
-            console.log('this.localNote',this.localNote);
-            requestData['url'] = config.serverUrl + `/api/${this.localNote.notebook.id}/notes/${this.localNote.id}`;
-            requestData['headers'] = headers;
-            requestData['method'] = 'PUT';
-            requestData['data'] = data;
-
-            console.log('sending new')
             request.fetch(requestData)
-            .then(([response,json]) => {
-                this.updateNoteSuccess({'message':'Note updated!'});
-            })
-            .catch((error) => {
-                console.error(error);
+            .then( ([response, dados]) => {
                 this.busy = false;
-                notify.notify(error,'error');
-            });
-        },
-        deleteNote() {
-            this.busy = true;
-            const headers = new Headers();
-            
-            let requestData = {};
-            const postData = {};
-
-            requestData['url'] = config.serverUrl + `/api/notes/${this.localNote.id}/`;
-            requestData['headers'] = headers;
-            requestData['method'] = 'DELETE';
-            requestData['data'] = postData;
-
-            request.fetch(requestData)
-            .then(([response,json]) => {
-                this.localNote.completed = true;
-                this.localNote['message'] = object.message;
-                this.deletedNoteSuccess(this.localNote);
+                notify.notify(dados.message,'success');
+                this.createdNoteSuccess(dados);
             })
             .catch((error) => {
                 this.busy = false;
@@ -101,15 +71,15 @@ export default {
             }
             clearTimeout(time);
             time = setTimeout(() => {
-                vueInstance[fn]() //runs the function after the time
-                this.debounceTimer[fn] = null; //clear the timer of this request
+                vueInstance[fn]()
+                this.debounceTimer[fn] = null;
             }, waitTime);
             this.debounceTimer[fn] = time;
         }
     },
     watch: {
-        // whenever noteEditActive changes, this function will run
-        noteEditActive: function (newProp, oldProp) {
+        // whenever noteCreateActive changes, this function will run
+        noteCreateActive: function (newProp, oldProp) {
             if(newProp && !oldProp) {
                 this.localNote = Object.assign({},this.note);
                 this.localNoteName = this.localNote.name
@@ -119,23 +89,24 @@ export default {
         localNoteName: function (newProp, oldProp) {
             if(oldProp !== null){
                 this.localNote.name = newProp;
-                this.debouncer(this, 'updateNote');
+                this.debouncer(this, 'createNote');
             }
         },
         localNoteContent: function (newProp, oldProp) {
             if(oldProp !== null){
                 this.localNote.content = newProp;
-                this.debouncer(this, 'updateNote');
+                this.debouncer(this, 'createNote');
             }
         }
     },
     created () {
+        // this.loadInbox();
         this.busy = false;
     },
-    template: /*jsx*/`
+    template: /*jsx */`
     <div>
-        <link rel="stylesheet" href="/ScreenComponents/Notes/edit.css">
-        <div class="modal" v-if="noteEditActive">
+        <link rel="stylesheet" href="/ScreenComponents/Notes/create.css">
+        <div class="modal" v-if="noteCreateActive">
             <div class="modal_container note_modal">
                 <div class=" form-group">
                     <div class="row">

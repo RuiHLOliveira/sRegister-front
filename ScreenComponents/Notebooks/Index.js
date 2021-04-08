@@ -95,16 +95,16 @@ export default {
         this.loadNotebooks();
     },
     template: /*jsx*/`
-    <div class="flexWrapper">
+    <div>
         <application-menu v-on:action="$emit('action',$event)"></application-menu>
         <div class="mainContainer">
-
+            
             <div class="flex-row alignitems-center mb-2 ">
                 <h1 class="notebookInfo">Notebooks</h1>
                 <button 
                     @click="showCreateForm()"
                     class="ml-2 mt-1 btn btn-primary btn-small"
-                >New</button>
+                >New notebook</button>
             </div>
 
             <div class="flex-row"> <!-- container -->

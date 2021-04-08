@@ -3,30 +3,43 @@ import config from "../../app/config.js";
 import EventBus from "../../app/EventBus.js";
 import request from "../../app/request.js";
 import NoteEdit from "./Edit.js";
+import NoteCreate from "./Create.js";
 
 export default {
     data: function () {
       return {
             busy: false,
+            active: false,
             notes: [],
             noteEditActive: false,
             noteForEditing: {},
+            noteCreateActive: false,
+            createdNote: {},
         }
     },
     props: ['activeNotebook'],
     computed: {
     },
     watch: {
-        //adds the new notebook to the notebooks array when the old createdNotebook value was null and the new value isnt null
+        //loads the notes once there is an active notebook
         activeNotebook: function (newValue, oldValue) {
+            this.active = false;
             if(newValue.id != null && oldValue.id != newValue.id) {
                 // this.notebooks.unshift(newValue);//adds the new notebook to the notebooklist
+                this.active = true;
                 this.loadNotes(this.activeNotebook.id);
+            }
+        },
+        //adds the new note to the notes array when the old createdNote value was null and the new value isnt null
+        createdNote: function (newValue, oldValue) {
+            if(newValue != null && oldValue == null) {
+                this.notes.unshift(newValue);//adds the new notebook to the notebooklist
             }
         }
     },
     components: {
         'NoteEdit': NoteEdit,
+        'NoteCreate': NoteCreate,
     },
     methods: {
         loadNotes(notebookId){
@@ -46,14 +59,24 @@ export default {
                 notify.notify(error,'error');
             });
         },
+        showCreateForm() {
+            this.noteCreateActive = true;
+        },
         editNote(note){
             this.noteEditActive = true;
             this.noteForEditing = note;
-            console.log(this.noteEditActive );
-            console.log(this.noteForEditing );
         },
         assignUpdatedNote(updatedNote) {
-            window.alert('please asign updated note')
+            this.notes.forEach((note, index) => {
+                if(note.id == updatedNote.id) {
+                    // if(updatedNote.transformedInNotebook) {
+                    //     this.notes.splice(index,1); //removes the notebook from list
+                    // } else {
+                    // updatedNote = this.fillReadableDuedate(updatedNote);
+                    this.notes[index] = Object.assign({},updatedNote);
+                    // }
+                }
+            });
         },
     },
     created () {
@@ -61,11 +84,25 @@ export default {
     template: /*jsx*/`
     <div class="notesListing">
         <div class="loader" v-if="busy"></div>
-        <div v-else>
+        <div v-else-if="active">
+            <div class="notelisting-notebook-title">
+                <span class="bold">{{this.activeNotebook.name}}</span>
+                <button 
+                    @click="showCreateForm()"
+                    class="ml-2 mt-1 btn btn-primary btn-small"
+                >New note</button>
+            </div>
+            <div class="notelisting-notebook-title"
+                v-if="notes.length == 0"
+            >
+                nothing here
+            </div>
             <div class="noteBox" 
                 v-for="note in notes" :key="note.id"
             >
-                <div @click="editNote(note)">
+                <div 
+                    @click="editNote(note)"
+                >
                     <b>{{note.name}}</b>
                     <br>
                     {{note.content}}
@@ -77,6 +114,11 @@ export default {
                     ><i class="fas fa-user-check"></i></span>
                 </div>
             </div>
+            
+            <!--<note-create
+                :noteCreateActive.sync="noteCreateActive"
+                :createdNote.sync="createdNote"
+            ></note-create>-->
 
             <note-edit
                 :noteEditActive.sync="noteEditActive"
