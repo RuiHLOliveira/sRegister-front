@@ -7,6 +7,7 @@ export default {
     data: function () {
       return {
             busy: true,
+            success: false,
             localNote: null,
             localNoteName: null,
             localNoteContent: null,
@@ -18,6 +19,13 @@ export default {
     computed: {
     },
     methods: {
+        successIcon(){
+            this.success = true;
+            let thisinstance = this;
+            setTimeout(function () {
+                thisinstance.success = false;
+            }, 2000);
+        },
         closeModal () {
             this.$emit('update:noteEditActive', false);
             this.localNote = null
@@ -25,8 +33,16 @@ export default {
         assignUpdatedNote(){
             this.$emit('update:note', this.localNote);
         },
+        createNoteSuccess (object) {
+            this.busy = false;
+            this.successIcon();
+            this.assignUpdatedNote();
+            // this.closeModal();
+            // notify.notify(object.message,'success');
+        },
         updateNoteSuccess (object) {
             this.busy = false;
+            this.successIcon();
             this.assignUpdatedNote();
             // this.closeModal();
             // notify.notify(object.message,'success');
@@ -36,6 +52,40 @@ export default {
             this.assignUpdatedNote();
             this.closeModal();
             notify.notify(object.message,'success');
+        },
+        saveNote(){
+            if(this.localNote.id == null) {
+                this.createNote();
+            } else {
+                this.updateNote();
+            }
+        },
+        createNote() {
+            this.busy = true;
+            this.localNote.name = this.localNoteName;
+            this.localNote.content = this.localNoteContent;
+            const headers = new Headers();
+            console.log('note',this.localNote)
+            let requestData = {};
+            const data = {
+                'name': this.localNote.name,
+                'content': this.localNote.content,
+            };
+            requestData['url'] = config.serverUrl + `/api/${this.localNote.notebook.id}/notes`;
+            requestData['headers'] = headers;
+            requestData['method'] = 'POST';
+            requestData['data'] = data;
+
+            console.log('sending new')
+            request.fetch(requestData)
+            .then(([response,json]) => {
+                this.createNoteSuccess({'message':'Note created!'});
+            })
+            .catch((error) => {
+                console.error(error);
+                this.busy = false;
+                notify.notify(error,'error');
+            });
         },
         updateNote() {
             this.busy = true;
@@ -48,7 +98,6 @@ export default {
                 'name': this.localNote.name,
                 'content': this.localNote.content,
             };
-            console.log('this.localNote',this.localNote);
             requestData['url'] = config.serverUrl + `/api/${this.localNote.notebook.id}/notes/${this.localNote.id}`;
             requestData['headers'] = headers;
             requestData['method'] = 'PUT';
@@ -119,13 +168,13 @@ export default {
         localNoteName: function (newProp, oldProp) {
             if(oldProp !== null){
                 this.localNote.name = newProp;
-                this.debouncer(this, 'updateNote');
+                this.debouncer(this, 'saveNote');
             }
         },
         localNoteContent: function (newProp, oldProp) {
             if(oldProp !== null){
                 this.localNote.content = newProp;
-                this.debouncer(this, 'updateNote');
+                this.debouncer(this, 'saveNote');
             }
         }
     },
@@ -167,7 +216,10 @@ export default {
                             >close</button>
                         </div>
                         <div class="ml-2">
-                            <div class="loader inline" v-if="busy"></div>
+                            <div class="newLoader" v-if="busy"><i class="fas fa-spinner"></i></div>
+                        </div>
+                        <div class="ml-2">
+                            <div class="successIcon" v-if="success"><i class="fas fa-check"></i></div>
                         </div>
                     </div>
                 </div>

@@ -7,6 +7,7 @@ export default {
         const data = JSON.stringify(params.data);
         params.method = params.method !== undefined ? params.method : 'GET'
         params.headers.append("Authorization", window.localStorage.sRegisterToken);
+        params.headers.append('Accept','application/json');
         if(params.method == 'POST' || params.method == 'PUT')
             params.headers.append('Content-Type','application/json');
 
@@ -19,18 +20,23 @@ export default {
                 })
                 .then( (response) => {
                     if(!response.ok && response.status != 401) {
-                        console.log('caiu 1')
+                        console.log('erro non-401')
                         console.log(response);
-                        response.json().then((json) => {
-                            console.log('caiu 1.1')
-                            console.log(json);
-                            reject(json.message)
+                        response.text().then((text) => {
+                            console.log('decode text')
+                            console.log(text);
+                            try {
+                                let json = JSON.parse(text);
+                                reject(json.message ? json.message : json.detail ? json.detail : "an error ocurred")
+                            } catch (error) {
+                                console.log('catch do jsonparse');
+                                console.error(error);
+                                reject(text)
+                            }
                         })
                         .catch((error) => {
-                            console.log('caiu 1.2')
-                            console.log(error)
-                            console.log(response.text())
-                            reject(response)
+                            console.log('catch do text')
+                            reject(error)
                         })
                         return;
                     }
@@ -59,7 +65,7 @@ export default {
                             } else {
                                 //ELSE, THATS A REQUEST ERROR
                                 // console.log(json.message);
-                                reject(json.message);
+                                reject(json.message ? json.message : json.detail ? json.detail : "an error ocurred")
                             }
                         }
                     })
@@ -98,7 +104,7 @@ export default {
                         } else {
                             //ELSE, THATS A REQUEST ERROR
                             // console.log(json.message);
-                            reject(json.message);
+                            reject(json.message ? json.message : json.detail ? json.detail : "an error ocurred")
                         }
                     })
                 })
@@ -128,9 +134,9 @@ export default {
                 })
                 .then( (response) => {
                     if(!response.ok && response.status != 401) {
-                        console.log('caiu 2')
+                        console.log('erro non-401 ao repetir request')
                         response.json().then((json) => {
-                            reject(json.message)
+                            reject(json.message ? json.message : json.detail ? json.detail : "an error ocurred")
                         })
                         .catch((error) => {
                             reject(response)
@@ -144,7 +150,7 @@ export default {
                         } else {
                             //ELSE, THATS A REQUEST ERROR
                             // console.log(json.message);
-                            reject(json.message);
+                            reject(json.message ? json.message : json.detail ? json.detail : "an error ocurred")
                         }
                     })
                 })

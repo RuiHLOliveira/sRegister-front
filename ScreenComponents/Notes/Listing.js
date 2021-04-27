@@ -15,6 +15,12 @@ export default {
             noteForEditing: {},
             noteCreateActive: false,
             createdNote: {},
+            defaultNewNote: {
+                'id' : null,
+                // 'name':'',
+                // 'content':'',
+                'notebook': {}
+            }
         }
     },
     props: ['activeNotebook'],
@@ -27,7 +33,8 @@ export default {
             if(newValue.id != null && oldValue.id != newValue.id) {
                 // this.notebooks.unshift(newValue);//adds the new notebook to the notebooklist
                 this.active = true;
-                this.loadNotes(this.activeNotebook.id);
+                this.defaultNewNote.notebook = newValue;
+                this.loadNotes(newValue.id);
             }
         },
         //adds the new note to the notes array when the old createdNote value was null and the new value isnt null
@@ -59,14 +66,18 @@ export default {
                 notify.notify(error,'error');
             });
         },
-        showCreateForm() {
-            this.noteCreateActive = true;
+        newNote() {
+            this.noteEditActive = true;
+            this.noteForEditing = this.defaultNewNote;
+            console.log('note for create', this.defaultNewNote);
         },
         editNote(note){
             this.noteEditActive = true;
             this.noteForEditing = note;
+            console.log('note for editing',note);
         },
         assignUpdatedNote(updatedNote) {
+            let found = false;
             this.notes.forEach((note, index) => {
                 if(note.id == updatedNote.id) {
                     // if(updatedNote.transformedInNotebook) {
@@ -74,7 +85,11 @@ export default {
                     // } else {
                     // updatedNote = this.fillReadableDuedate(updatedNote);
                     this.notes[index] = Object.assign({},updatedNote);
+                    found = true;
                     // }
+                }
+                if(!found){
+                    this.notes.push(Object.assign({},updatedNote));
                 }
             });
         },
@@ -88,7 +103,7 @@ export default {
             <div class="notelisting-notebook-title">
                 <span class="bold">{{this.activeNotebook.name}}</span>
                 <button 
-                    @click="showCreateForm()"
+                    @click="newNote()"
                     class="ml-2 mt-1 btn btn-primary btn-small"
                 >New note</button>
             </div>
