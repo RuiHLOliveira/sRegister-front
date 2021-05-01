@@ -106,47 +106,52 @@ export default {
     created () {
     },
     template: /*jsx*/`
-    <div class="notesListing">
-        <div class="loader" v-if="busy"></div>
-        <div v-else-if="active">
-            <div class="notelisting-notebook-title">
-                <span class="bold">{{this.activeNotebook.name}}</span>
-                <button 
-                    @click="newNote()"
-                    class="ml-2 mt-1 btn btn-primary btn-small"
-                >New note</button>
-            </div>
-            <div class="notelisting-notebook-title"
-                v-if="notes.length == 0"
-            >
-                nothing here
-            </div>
-            <div class="noteBox" 
-                v-for="note in notes" :key="note.id" @click="editNote(note)"
-            >
-                <div >
-                    <b>{{note.name}}</b><br>
-                    {{note.content}}
+    <div>
+        <link rel="stylesheet" href="/ScreenComponents/Notes/listing.css">
+        <div class="notesListing">
+            <div class="loader" v-if="busy"></div>
+            <div v-else-if="active">
+                <div class="notelisting-notebook-title">
+                    <span class="bold">{{this.activeNotebook.name}}</span>
+                    <button 
+                        @click="newNote()"
+                        class="ml-2 mt-1 btn btn-primary btn-small"
+                    >New note</button>
                 </div>
-                <div class="note-actionbar">
-                    <span 
-                        @click="dosomething()"
-                        class="note-btn"
-                    ><i class="fas fa-user-check"></i></span>
+                <div class="notelisting-zero-notes"
+                    v-if="notes.length == 0"
+                >
+                    nothing here
                 </div>
-            </div>
-            
-            <!--<note-create
-                :noteCreateActive.sync="noteCreateActive"
-                :createdNote.sync="createdNote"
-            ></note-create>-->
+                <div class="flex-row">
+                    <div class="noteBox" 
+                        v-for="note in notes" :key="note.id" @click="editNote(note)"
+                    >
+                        <div >
+                            <b>{{note.name}}</b><br>
+                            {{note.content}}
+                        </div>
+                        <div class="note-actionbar">
+                            <span 
+                                @click="dosomething()"
+                                class="note-btn"
+                            ><i class="fas fa-user-check"></i></span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!--<note-create
+                    :noteCreateActive.sync="noteCreateActive"
+                    :createdNote.sync="createdNote"
+                ></note-create>-->
 
-            <note-edit
-                :noteEditActive.sync="noteEditActive"
-                :note="noteForEditing"
-                v-on:update:note="assignUpdatedNote($event)"
-            ></note-edit>
-            
+                <note-edit
+                    :noteEditActive.sync="noteEditActive"
+                    :note="noteForEditing"
+                    v-on:update:note="assignUpdatedNote($event)"
+                ></note-edit>
+                
+            </div>
         </div>
     </div>
     `

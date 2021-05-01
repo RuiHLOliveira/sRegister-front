@@ -1,0 +1,50 @@
+
+.notesListing {
+    padding: 0px 5px;
+    /* margin: 5px; */
+}
+
+.notelisting-notebook-title {
+    /* border: 1px solid #dedede; */
+    /* background: #ffffff; */
+    padding: 10px;
+    margin: 0px 10px;
+}
+
+.notelisting-zero-notes {
+    /* border: 1px solid #dedede; */
+    /* background: #ffffff; */
+    padding: 10px;
+    margin: 0px 10px;
+}
+
+.noteBox {
+    border: 1px solid #dedede;
+    background: #ffffff;
+    padding: 10px;
+    margin: 10px 10px;
+    /* border-radius: 10px; */
+    width: 250px;
+}
+
+.noteBox:hover {
+    box-shadow: 0px 1px 1px rgba(0,0,0,.2), 0px 4px 10px rgba(0,0,0,.2);
+}
+
+.note-actionbar {
+    border-top: 1px solid #efefef;
+    margin-top: 20px;
+    padding-top: 5px;
+    text-align: right;
+}
+
+.note-btn {
+    cursor:pointer;
+    color: #333;
+    display: inline-block;
+    padding: 5px 7px;
+    border-radius: 50%;
+}
+.note-btn:hover {
+    background: #eeeeee;
+}
