@@ -100,33 +100,37 @@ export default {
         <menu-toggle-button></menu-toggle-button>
         <div class="mainContainer">
             
-            <div class="flex-row alignitems-center mb-2 ">
-                <h1 class="notebookInfo">Notebooks</h1>
-                <button 
-                    @click="showCreateForm()"
-                    class="ml-2 mt-1 btn btn-primary btn-small"
-                >New notebook</button>
-            </div>
+            
 
-            <div class="flex-row"> <!-- container -->
-                <div> <!-- notebooks -->
-                    <div class="loader" v-if="busy"></div>
-                    <div v-else class="notebookSidebar">
-                        <div class="notebook" 
-                            v-for="notebook in notebooks" :key="notebook.id"
-                            @click="openNotebook(notebook)"
-                        >
-                            <div>{{notebook.name}}</div>
-                            <!-- <button 
-                                @click="showEditForm(notebook)"
-                                class="mt-2 btn btn-primary"
-                            >edit</button> -->
+            <div class="flex-row">
+                <div class="flex-column"> <!-- container -->
+                    <div class="flex-row alignitems-center mb-2 ">
+                        <h1 class="notebookInfo">Notebooks</h1>
+                        <button 
+                            @click="showCreateForm()"
+                            class="ml-2 mt-1 btn btn-primary btn-small"
+                        >New notebook</button>
+                    </div>
+                
+                    <div> <!-- notebooks -->
+                        <div class="loader" v-if="busy"></div>
+                        <div v-else class="notebookSidebar">
+                            <div class="notebook" 
+                                v-for="notebook in notebooks" :key="notebook.id"
+                                @click="openNotebook(notebook)"
+                            >
+                                <div>{{notebook.name}}</div>
+                                <!-- <button 
+                                    @click="showEditForm(notebook)"
+                                    class="mt-2 btn btn-primary"
+                                >edit</button> -->
+                            </div>
+                            <div v-if="notebooks.length == 0">There are no notebooks!</div>
                         </div>
-                        <div v-if="notebooks.length == 0">There are no notebooks!</div>
                     </div>
                 </div>
 
-                <div> <!-- notes -->
+                <div> <!-- notes listing -->
                     <notes-listing
                         :activeNotebook="activeNotebook"
                     ></notes-listing>
