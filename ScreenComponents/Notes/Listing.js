@@ -93,6 +93,15 @@ export default {
                 }
             });
         },
+        dosomething(e){
+            alert('implementar');
+            this.stopPropagation()
+        },
+        stopPropagation(){
+            let e = window.event;
+            e.cancelBubble = true;
+            if (e.stopPropagation) e.stopPropagation();
+        }
     },
     created () {
     },
@@ -113,13 +122,10 @@ export default {
                 nothing here
             </div>
             <div class="noteBox" 
-                v-for="note in notes" :key="note.id"
+                v-for="note in notes" :key="note.id" @click="editNote(note)"
             >
-                <div 
-                    @click="editNote(note)"
-                >
-                    <b>{{note.name}}</b>
-                    <br>
+                <div >
+                    <b>{{note.name}}</b><br>
                     {{note.content}}
                 </div>
                 <div class="note-actionbar">
