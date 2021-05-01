@@ -11,12 +11,15 @@ export default {
         }
     },
     template: `
-        <button
-            class="toggleMenu btn btn-transparent"
-            :class="{ innerToggle : isInnerToggle }"
-            @click="toggleMenu()">
-            <i class="fas fa-bars" v-if="!isInnerToggle"></i>
-            <i class="fas fa-times" v-if="isInnerToggle"></i>
-        </button>
+        <div>
+            <link rel="stylesheet" href="/SpecificComponents/menutogglebutton.css">
+            <button
+                class="toggleMenu btn btn-transparent"
+                :class="{ innerToggle : isInnerToggle }"
+                @click="toggleMenu()">
+                <i class="fas fa-bars" v-if="!isInnerToggle"></i>
+                <i class="fas fa-times" v-if="isInnerToggle"></i>
+            </button>
+        </div>
     `
 };

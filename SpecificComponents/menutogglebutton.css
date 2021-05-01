@@ -1,0 +1,11 @@
+.toggleMenu:hover{
+    color: #777777;
+}
+
+.innerToggle {
+    color: white;
+}
+
+.innerToggle:hover {
+    color: #cccccc;
+}
