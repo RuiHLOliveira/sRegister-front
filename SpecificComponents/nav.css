@@ -2,10 +2,10 @@
 /* NAV BAR */
 nav#sidebar {
     background: var(--blue);
-    width: 150px;
-    height: 100vh;
     position: fixed;
     /* margin-right: 50px; */
+    width: 100vw;
+    height: 100vh;
 }
 
 nav#sidebar > ul > li > span,

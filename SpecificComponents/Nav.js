@@ -2,7 +2,8 @@ import EventBus from "./../app/EventBus.js";
 export default {
     data: function () {
       return {
-            userName: "guy"
+            userName: "guy",
+            menuActive: false
         }
     },
     computed: {
@@ -24,11 +25,20 @@ export default {
         action(name){
             EventBus.$emit('action',name)
         },
+        toggleMenu(){
+            this.menuActive = !this.menuActive;
+        }
+    },
+    created () {
+        EventBus.$on('toggleMenu',(data) => {
+            this.toggleMenu();
+        });
     },
     template: /*jsx*/`
     <div>
         <link rel="stylesheet" href="/SpecificComponents/nav.css">
-        <nav id="sidebar">
+        <nav id="sidebar" v-if="menuActive">
+            <menu-toggle-button isInnerToggle="true"></menu-toggle-button>
             <div class="sidebar-header">
                 <span>
                     <i class="fas fa-2x fa-tasks"></i>

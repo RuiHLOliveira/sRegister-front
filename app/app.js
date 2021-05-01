@@ -5,8 +5,10 @@ import noticeBox from "./../Components/NoticeBox.js";
 import config from "./../../app/config.js";
 import notify from "./notify.js";
 import request from "./request.js";
+import MenuToggleButton from './../SpecificComponents/MenuToggleButton.js';
 
 Vue.component('application-menu', ApplicationMenu);
+Vue.component('menu-toggle-button', MenuToggleButton);
 Vue.component('notice-box', noticeBox);
 Vue.directive('focus', {
     // Quando o elemento vinculado é inserido no DOM...

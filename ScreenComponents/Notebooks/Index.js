@@ -96,7 +96,8 @@ export default {
     },
     template: /*jsx*/`
     <div>
-        <application-menu v-on:action="$emit('action',$event)"></application-menu>
+        <application-menu v-on:action="$emit('action',$event)" ></application-menu>
+        <menu-toggle-button></menu-toggle-button>
         <div class="mainContainer">
             
             <div class="flex-row alignitems-center mb-2 ">
