@@ -62,7 +62,7 @@ export default {
         <div class="modal_container lg form-group">
             <div class="row">
                 <div class="col">
-                    <h2 class="notebookInfo">New Notebook</h2>
+                    <h2 class="notebookTitle">New Notebook</h2>
                 </div>
             </div>
 

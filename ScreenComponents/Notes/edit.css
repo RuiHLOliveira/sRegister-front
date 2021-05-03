@@ -1,8 +1,38 @@
-.note_modal {
-    border: 1px solid #dedede;
-    border-radius: 10px;
-    padding: 10px;
-    min-width: 650px;
+/* MODAL */
+
+.edit-modal::before {
+    content: "";
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgb(0, 0, 0, 0.2);
+}
+
+.edit-modal {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    top: 0px;
+    left: 0px;
+    width: 100vw;
+    /* height: 100vh; */
+    height: auto;
+    z-index: 1;
+}
+
+.edit-modal-container{
+    position: relative;
+    background-color: #ffffff;
+    animation: fadeInDown .3s forwards;
+
+    /* border: 1px solid #dedede; */
+    margin: 10px auto;
+    padding: 5px 20px;
+    min-width: 95vw;
+
+    z-index: 1;
 }
 
 .name_edit {

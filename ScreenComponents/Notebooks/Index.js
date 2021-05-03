@@ -83,7 +83,6 @@ export default {
             .catch((error) => {
                 this.busy = false;
                 notify.notify(error,'error');
-                // EventBus.$emit('HANDLE_REQUEST_ERROR', {response, json});
             });
         },
         openNotebook(notebook){
@@ -96,16 +95,19 @@ export default {
     },
     template: /*jsx*/`
     <div>
+        <link rel="stylesheet" href="./ScreenComponents/Notebooks/index.css">
         <application-menu v-on:action="$emit('action',$event)" ></application-menu>
-        <menu-toggle-button></menu-toggle-button>
+        
+        <div class="mainHeader flex-row f-alignitems-center">
+            <menu-toggle-button></menu-toggle-button>
+        </div>
+
         <div class="mainContainer">
             
-            
-
             <div class="flex-row">
-                <div class="flex-column"> <!-- container -->
-                    <div class="flex-row alignitems-center mb-2 ">
-                        <h1 class="notebookInfo">Notebooks</h1>
+                <div class="flex-column mh95vh leftbar"> <!-- container -->
+                    <div class="flex-row f-alignitems-center mb-2">
+                        <span class="notebookTitle">Notebooks</span>
                         <button 
                             @click="showCreateForm()"
                             class="ml-2 mt-1 btn btn-primary btn-small"

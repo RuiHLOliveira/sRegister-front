@@ -130,7 +130,7 @@ export default {
                         </div>
                     </div>
 
-                    <div class="flex-row alignitems-center">
+                    <div class="flex-row f-alignitems-center">
                         <div class="">
                             <button 
                                 class="btn btn-secondary"

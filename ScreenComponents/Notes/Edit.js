@@ -184,8 +184,8 @@ export default {
     template: /*jsx*/`
     <div>
         <link rel="stylesheet" href="/ScreenComponents/Notes/edit.css">
-        <div class="modal" v-if="noteEditActive">
-            <div class="modal_container note_modal">
+        <div class="edit-modal" v-if="noteEditActive">
+            <div class="edit-modal-container note_modal">
                 <div class=" form-group">
                     <div class="row">
                         <div class="col">
@@ -208,7 +208,7 @@ export default {
                         </div>
                     </div>
 
-                    <div class="flex-row alignitems-center">
+                    <div class="flex-row f-alignitems-center">
                         <div class="">
                             <button 
                                 class="btn btn-secondary"

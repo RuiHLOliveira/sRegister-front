@@ -123,11 +123,11 @@ export default {
                 >
                     nothing here
                 </div>
-                <div class="flex-row">
+                <div class="flex-row flex-wrap-wrap">
                     <div class="noteBox" 
                         v-for="note in notes" :key="note.id" @click="editNote(note)"
                     >
-                        <div >
+                        <div class="note-content overflow-hidden">
                             <b>{{note.name}}</b><br>
                             {{note.content}}
                         </div>
