@@ -1,0 +1,18 @@
+
+.bg-color-lightgray {
+    background-color: var(--light-gray);
+}
+
+.round-1 { border-radius: 5px; }
+.round-2 { border-radius: 10px; }
+.round-3 { border-radius: 15px; }
+.round-4 { border-radius: 20px; }
+.round-5 { border-radius: 25px; }
+
+.border-dev { border: 0px dashed var(--pureblack); }
+
+.border-lightgray { border: 1px solid var(--light-gray); }
+
+.border-bottom-gray { border-bottom: 1px solid var(--gray); }
+
+.border-lightred { border: 1px solid var(--light-red); }

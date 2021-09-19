@@ -1,0 +1,55 @@
+
+a.btn {
+    text-decoration: none;
+}
+
+a.btn:visited {
+    color: initial;
+}
+
+.btn {
+    border-radius: 5px;
+    color: black;
+    cursor: pointer;
+    background-color: #eeeeee;
+    padding: 5px 10px;
+    border: 0px;
+}
+
+.btn:hover {
+    background-color: #dddddd;
+}
+
+.btn.green {
+    background-color: #00ff00;
+}
+
+.btn.red {
+    background-color: #ff0000;
+}
+
+.form-input {
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    padding: 10px;
+}
+
+.form-input.focus {
+    outline: none;
+}
+
+.form-input.bottom-only {
+    border: 0px;
+    border-bottom: 1px solid #ddd;
+}
+
+
+.textarea {
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    padding: 5px;
+    resize: none;
+    min-height: 100px;
+    max-height: 70vh;
+    overflow-y: scroll;
+  }
